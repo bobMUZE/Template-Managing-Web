@@ -10,36 +10,52 @@ class MainView(ListView):
     template_name = "tpllist/main.html"
     context_object_name = "customers"
 
-
-
-class TplMainView(ListView):
+class CustomerView(ListView):
     model = Customer
-    template_name = "tpllist/tpl_main.html"
-    context_object_name = 'customers'
-
-class MaketplLV(ListView): 
-    # one view multi model test
-    model = Customer
-    context_object_name = 'customers'
-    extra_context = {
-        'sites' : Sites.objects.all()
-    }
-    template_name = "tpllist/maketpl_all.html"
-
-
-class CustomerLV(ListView):
-    template_name = "tpllist/customer_list.html"
-    model = Customer
-    context_object_name = 'customers'
-
-class CustomerDV(DetailView):
-    template_name = "tpllist/customer_detail.html"
-    model = Customer
-    context_object_name = 'customers'
+    template_name = "tpllist/customer.html"
+    context_object_name = "customers"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sites'] = Sites.objects.filter(customer_id=self.kwargs['pk'])
+        context['customer_id'] = self.kwargs['pk']
+        context['curr_customer'] = Customer.objects.filter(customer_id=self.kwargs['pk'])
         # context['customers'] =Customer.objects.all()
+        return context
+
+class CustomerInfoView(DetailView):
+    model = Customer
+    template_name = "tpllist/customer_info.html"
+    context_object_name = "customers"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sites'] = Sites.objects.filter(customer_id=self.kwargs['pk'])
+        context['customer_id'] = self.kwargs['pk']
+        context['curr_customer'] = Customer.objects.filter(customer_id=self.kwargs['pk'])
+        # context['customers'] =Customer.objects.all()
+        return context
+
+class CustomerSiteLV(ListView):
+    model = Customer
+    template_name = "tpllist/customer_site.html"
+    context_object_name = "customers"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sites'] = Sites.objects.filter(customer_id=self.kwargs['pk'])
+        context['customer_id'] = self.kwargs['pk']
+        context['curr_customer'] = Customer.objects.filter(customer_id=self.kwargs['pk'])
+        # context['customers'] =Customer.objects.all()
+        return context
+
+class CustomerSiteDV(DetailView):
+    model = Sites
+    template_name = "tpllist/customer_site_detail.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sites'] = Sites.objects.filter(site_id=self.kwargs['pk'])
+        context['templates'] = Templates.objects.filter(site_id=self.kwargs['pk'])
+        context['curr_customer'] = Customer.objects.filter(customer_id=self.kwargs['customer_id'])
+        context['customer_id'] = self.kwargs['customer_id']
+        context['site_path'] = Sites.objects.filter(site_id=self.kwargs['pk'])
         return context
 
 class CustomerTplDV(DetailView):

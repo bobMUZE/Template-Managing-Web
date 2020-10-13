@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v4.1.1">
-    <title>MUZE - 템플릿 관리 페이지</title>
+    <title>MUZE - {{customer_id}}</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/dashboard/">
 
@@ -35,7 +35,10 @@
   </head>
   <body>
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3 nav-link" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">MUZE</a>
+      <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3 nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">MUZE</a>
+      <div class="dropdown-menu" aria-labelledby="dropdown01">
+        <a class="dropdown-item" href="/main">Back to Main</a>
+      </div>
   <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -51,42 +54,38 @@
   <div class="row">
     <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
       <div class="sidebar-sticky pt-3">
-        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-          <span>Customer List</span>
-          <a class="d-flex align-items-center text-muted" href="#" aria-label="Add a new report">
-            <span data-feather="plus-circle"></span>
+        <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+          <a class="nav-link" href="/main/{{customer_id}}">
+          Current Customer ID <br>{{customer_id}}
           </a>
+        </h5>
+
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+          <span>Manage</span>
         </h6>
+        {% for curr in curr_customer %}
         <ul class="nav flex-column mb-2">
-        {% for customer in customers %}
           <li class="nav-item">
-            <a class="nav-link" href="{{customer.get_absolute_url}}">
+            <!--have to insert detailview-->
+            <a class="nav-link" href="{{curr.get_info_url}}">
               <span data-feather="file-text"></span>
-              {{customer.customer_name}}
+              Infomation
             </a>
           </li>
-        {% endfor %}
+          <li class="nav-item">
+            <!--have to insert site list view-->
+            <a class="nav-link" href="{{curr.get_site_url}}">
+              <span data-feather="file-text"></span>
+              Root Sites
+            </a>
+          </li>
         </ul>
+        {% endfor %}
       </div>
     </nav>
-
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Dashboard</h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
-          <div class="btn-group mr-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-          </div>
-          <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-            <span data-feather="calendar"></span>
-            This week
-          </button>
-        </div>
-      </div>
-
-      <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>      
-    </main>
+    {% block content %}
+ 
+    {% endblock %}
   </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

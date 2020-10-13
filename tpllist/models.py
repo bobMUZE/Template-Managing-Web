@@ -17,7 +17,15 @@ class Customer(models.Model):
         return self.title
     
     def get_absolute_url(self):
-        return reverse("tpl_manage:customer_detail", args=(self.customer_id, ))
+        return reverse("tpl_manage:customer_main", args=(self.customer_id, ))
+
+    def get_info_url(self):
+        return reverse("tpl_manage:customer_info", args=(self.customer_id, ))
+    
+    def get_site_url(self):
+        return reverse("tpl_manage:customer_site", args=(self.customer_id, ))
+    
+    
 
 
 class LicenseTable(models.Model):
@@ -43,8 +51,9 @@ class Sites(models.Model):
     def __str__(self):
         return self.title
     
-    def get_absolute_url(self):
-        return reverse("tpl_manage:customer_tpl_detail", args=(self.customer_id, self.site_id))
+
+    def get_tpl_url(self):
+        return reverse("tpl_manage:customer_site_detail", args=(self.customer_id, self.site_id, ))
 
 
 class Templates(models.Model):

@@ -4,13 +4,12 @@ from tpllist import views
 app_name = 'tpl_manage'
 urlpatterns = [
     # main view - full dashboard 
-    path('make_tpl/', views.MaketplLV.as_view(), name='make_tpl'),
-
-    path('tpl_main/', views.TplMainView.as_view(), name='index'),
     path('main/', views.MainView.as_view(), name='main'),
-    path('customer_list/', views.CustomerLV.as_view(), name='customer_list'),
-    re_path(r'^customer_list/(?P<pk>[-\w]+)/$', views.CustomerDV.as_view(), name='customer_detail'), 
-    # customer_list/<customer_id>/<site_id>
+    re_path(r'^main/(?P<pk>[-\w]+)/$', views.CustomerView.as_view(), name='customer_main'),    
+    path('main/<pk>/info', views.CustomerInfoView.as_view(), name="customer_info"),
+    path('main/<pk>/site', views.CustomerSiteLV.as_view(), name="customer_site"),
+    path('main/<str:customer_id>/site/<pk>', views.CustomerSiteDV.as_view(), name="customer_site_detail"), 
+
     path('customer_list/<str:customer_id>/<pk>/', views.CustomerTplDV.as_view(), name='customer_tpl_detail')
 
 
