@@ -1,0 +1,9 @@
+<h1>Template List</h1>
+<br>
+
+{% for post in posts %}
+    <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+    <p>{{ post.description }}</p>
+{% endfor %}
+
+<br>
