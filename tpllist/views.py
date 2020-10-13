@@ -4,6 +4,14 @@ from django.views.generic import ListView, DetailView
 from tpllist.models import Customer, Sites, Templates
 
 # Create your views here.
+# Main view - default 
+class MainView(ListView):
+    model = Customer
+    template_name = "tpllist/main.html"
+    context_object_name = "customers"
+
+
+
 class TplMainView(ListView):
     model = Customer
     template_name = "tpllist/tpl_main.html"
