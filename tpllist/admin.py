@@ -15,7 +15,7 @@ class LicenseTableAdmin(admin.ModelAdmin):
 
 @admin.register(Sites)
 class SitesAdmin(admin.ModelAdmin):
-    list_display = ('site_id', 'customer_id', 'root_url')
+    list_display = ('site_id', 'customer_id', 'site_url')
 
 @admin.register(Templates)
 class TemplatesAdmin(admin.ModelAdmin):

@@ -23,27 +23,33 @@
     <small>/</small>
   </div>
 
-  <div class="row">
+
+  <div class="border my-3 p-3 bg-white rounded shadow-sm">
+    <h6 class="border-bottom border-gray pb-2 mb-2">Subpages Lists</h6>
+    
+    <div class="row">
     {% for site in sites %}
-    <div class="col-md-4">
-      <div class="card mb-4 shadow-sm">
-        <div class="embed-responsive embed-responsive-4by3">
-          <iframe class="embed-responsive-item" src="{{site.root_url}}" allowfullscreen></iframe>
-        </div>
-        <div class="card-body">
-          <p class="card-text">{{site.root_url}}</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="btn-group">
-              <a href="{{site.get_tpl_url}}"><button type="button" class="btn btn-sm btn-outline-secondary">View</button></a>
-              <button type="button" class="btn btn-sm btn-outline-secondary">Lists</button>
-              <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-            </div>
-            <small class="text-muted">9 mins</small>
+      <div class="col-md-4">
+        <div class="card mb-4 shadow-sm">
+          <div class="embed-responsive embed-responsive-4by3">
+            <iframe class="embed-responsive-item" src="{{site.site_url}}" allowfullscreen></iframe>
+          </div>
+          <!--<img class="bd-placeholder-img card-img-top" src="{{site.get_og_image}}" width="100%" height="225">-->
+          <div class="card-body">
+          <p class="card-text">{{site.site_url}}</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="btn-group">
+                <a href="{{site.get_tpl_url}}"><button type="button" class="btn btn-sm btn-outline-secondary">Lists</button></a>
+                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+              </div>
+                <a href="{{site.site_url}}" target="_blank"><button type="button" class="btn btn-sm btn-outline-secondary bg-secondary text-white">View</button></a>
+              </div>
           </div>
         </div>
       </div>
+      {% endfor %}
     </div>
-    {% endfor %}
+  
   </div>
 </main>
 

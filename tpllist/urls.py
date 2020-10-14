@@ -8,9 +8,10 @@ urlpatterns = [
     re_path(r'^main/(?P<pk>[-\w]+)/$', views.CustomerView.as_view(), name='customer_main'),    
     path('main/<pk>/info', views.CustomerInfoView.as_view(), name="customer_info"),
     path('main/<pk>/site', views.CustomerSiteLV.as_view(), name="customer_site"),
-    path('main/<str:customer_id>/site/<pk>', views.CustomerSiteDV.as_view(), name="customer_site_detail"), 
+    path('main/<pk>/permissions', views.CustomerPermissionLV.as_view(), name="customer_user"),
+    path('main/<str:customer_id>/site/<pk>/', views.CustomerSiteDV.as_view(), name="customer_site_detail"), 
+    path('main/<str:customer_id>/site/<pk>/tpl_add', views.CustomerTplCV.as_view(), name="customer_tpl_add"), 
 
-    path('customer_list/<str:customer_id>/<pk>/', views.CustomerTplDV.as_view(), name='customer_tpl_detail')
 
 
     # # Example: /blog/

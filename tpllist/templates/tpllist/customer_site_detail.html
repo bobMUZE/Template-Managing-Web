@@ -18,29 +18,63 @@
   </div>
   
 
-  <div class="shadow-sm border p-3 mb-5 bg-light rounded">
+  <div class="shadow-sm border p-3 mb-2 bg-light rounded">
     <h6 class="mb-0 text-black lh-100">Path</h6>
-    {% for path in site_path %}
-    <small>{{path.root_url}}</small>
-    {% endfor %}
+    <small>{{current_path}}</small>
   </div>
 
-  <div class="row">
-    {% for tpl in templates %}
-    <div class="col-md-4">
-      <div class="card mb-4 shadow-sm">
-        
-        <div class="card-body">
-          <p class="card-text">{{tpl.tpl_url}}</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="btn-group">
-              <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-              <button type="button" class="btn btn-sm btn-outline-secondary">Lists</button>
-              <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-            </div>
-            <small class="text-muted">9 mins</small>
+  <div class="border my-3 p-3 bg-white rounded shadow-sm">
+    <h6 class="border-bottom border-gray pb-2 mb-2">Subpages Lists</h6>
+    
+    <div class="row">
+      {% for subp in subpages %}
+      <div class="col-md-4">
+        <div class="card mb-4 shadow-sm">
+          <div class="embed-responsive embed-responsive-4by3">
+            <iframe class="embed-responsive-item" src="{{site.site_url}}" allowfullscreen></iframe>
+          </div>
+          <!--<img class="bd-placeholder-img card-img-top" src="{{site.get_og_image}}" width="100%" height="225">-->
+          <div class="card-body">
+            <p class="card-text">{{subp.site_url}}</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="btn-group">
+                <a href="{{subp.get_tpl_url}}"><button type="button" class="btn btn-sm btn-outline-secondary">Lists</button></a>
+                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+              </div>
+                <a href="{{subp.site_url}}" target="_blank"><button type="button" class="btn btn-sm btn-outline-secondary bg-secondary text-white">View</button></a>
+              </div>
           </div>
         </div>
+      </div>
+      {% endfor %}
+    </div>
+  
+  </div>
+
+  <div class="border my-3 p-3 bg-white rounded shadow-sm">
+    <div class="d-flex justify-content-between align-items-center border-bottom">
+      <h6 class=" border-gray mb-2">Template Lists</h6>
+      <a href="{{curr_site.get_tpl_add_url}}"><button type="button" class="mb-2 btn btn-sm btn-outline-secondary">Add</button></a>
+    </div>
+    {% for tpl in templates %}
+    <div class="media text-muted pt-3">
+      <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"></rect><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
+      <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+        <div class="d-flex justify-content-between align-items-center w-100">
+          <strong class="text-gray-dark">{{tpl.tpl_path}}</strong>
+          <a href="#">Edit</a>
+        </div>
+        <span class="d-block">
+          <p>
+              tpl_id : {{tpl.tpl_id}}<br>
+              customer_id : {{tpl.customer_id}}<br>
+              site_id : {{tpl.site_id}}<br>
+              permissions : {{tpl.permissions}}<br>
+              module_id : {{tpl.module_id}}<br>
+              tpl_url : {{tpl.tpl_url}}<br>
+              tpl_path : {{tpl.tpl_path}}<br>
+          </p>
+        </span>
       </div>
     </div>
     {% endfor %}

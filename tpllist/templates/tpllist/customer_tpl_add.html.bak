@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Customer Template - Add</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+      <div class="btn-group mr-2">
+        <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+      </div>
+      <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+        <span data-feather="calendar"></span>
+        This week
+      </button>
+    </div>
+  </div>
+  
+
+  <div class="shadow-sm border p-3 mb-5 bg-light rounded">
+    <h6 class="mb-0 text-black lh-100">Path</h6>
+    {% for path in site_path %}
+    <small>{{path.site_url}}</small>
+    {% endfor %}
+  </div>
+
+  <div class="col-md-8 order-md-1">
+    <h4 class="mb-3">Template Info</h4>
+    <form action="." class="needs-validation" novalidate="">
+      <div class="row">
+        <div class="form-group col-md-6 mb-3">
+          <label for="{{ form.customer_id.for_label_id }}">customer_id</label>         
+          <input type="text" class="form-control" name="customer_id" placeholder="" value="{{curr_site.customer_id}}" disabled required="">
+          <div class="invalid-feedback">
+            Valid Customer_id is requierd.
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="site_id">site_id</label>
+          <input type="text" class="form-control" id="site_id" placeholder="" value="{{curr_site.site_id}}" required="" disabled>
+          <div class="invalid-feedback">
+            Valid last name is required.
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="tpl_url">Template URL </label>
+        <input type="text" class="form-control" id="tpl_url" value="{{curr_site.site_url}}" disabled>
+        <div class="invalid-feedback">
+          Please enter a valid URL
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="tpl_path">Template XPath</label>
+        <input type="text" class="form-control" id="tpl_path" placeholder="" required="">
+        <div class="invalid-feedback">
+          Please enter your Template's XPath
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="permissions">Permission Code</label>
+          <select class="custom-select d-block w-100" id="permissions" required="">
+            <option value="">Choose...</option>
+            <option>0</option>
+          </select>
+          <div class="invalid-feedback">
+            Please select a valid Permission Code.
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="module_id">Module Code</label>
+          <select class="custom-select d-block w-100" id="module_id" required="">
+            <option value="">Choose...</option>
+            <option>0</option>
+          </select>
+          <div class="invalid-feedback">
+            Please provide a valid module_id.
+          </div>
+        </div>
+      </div>
+      <hr class="mb-4">
+      <button class="btn btn-primary btn-lg btn-block" type="submit">Add Template</button>
+      
+    </form>
+  </div>
+
+
+
+</main>
+
+<script src="/static/form-validation.js"></script>
+
+
+{% endblock %}

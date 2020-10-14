@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Customer Template - Add</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+      <div class="btn-group mr-2">
+        <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+      </div>
+      <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+        <span data-feather="calendar"></span>
+        This week
+      </button>
+    </div>
+  </div>
+  
+
+  <div class="shadow-sm border p-3 mb-5 bg-light rounded">
+    <h6 class="mb-0 text-black lh-100">Path</h6>
+    {% for path in site_path %}
+    <small>{{path.site_url}}</small>
+    {% endfor %}
+  </div>
+
+  <div class="col-md-8 order-md-1">
+    <h4 class="mb-3">Template Info</h4>
+    <form action='{{curr_customer.get_site_url}}' method="POST" class="needs-validation" novalidate="">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <hr class="mb-4">
+      <button class="btn btn-primary btn-lg btn-block" type="submit">Add Template</button>
+      
+    </form>
+  </div>
+
+
+
+</main>
+
+<script src="/static/form-validation.js"></script>
+
+
+{% endblock %}

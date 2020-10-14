@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Customer Permission Lists</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+      <div class="btn-group mr-2">
+        <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+      </div>
+      <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+        <span data-feather="calendar"></span>
+        This week
+      </button>
+    </div>
+  </div>
+  
+
+  <div class="shadow-sm border p-3 mb-5 bg-light rounded">
+    <h6 class="mb-0 text-black lh-100">Path</h6>
+    <small>/</small>
+  </div>
+
+
+  <div class="border my-3 p-3 bg-white rounded shadow-sm">
+    <h6 class="border-bottom border-gray pb-2 mb-2">User Lists</h6>
+    {% for user in permissions %}
+    <div class="media text-muted pt-3">
+      {% if user.permission_lvl == 0 %}
+        <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32"><title>Placeholder</title><rect width="100%" height="100%" fill="#000000"></rect><text font-size='10' x="50%" y="50%" fill="#ffffff" dy=".3em">Root</text></svg>
+      {% elif user.permission_lvl == 1 %}
+        <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32"><title>Placeholder</title><rect width="100%" height="100%" fill="#FF3333"></rect><text font-size='10' x="50%" y="50%" fill="#ffffff" dy=".3em">Admin</text></svg>
+      {% elif user.permission_lvl == 2 %}
+        <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"></rect><text font-size='8' x="50%" y="50%" fill="#ffffff" dy=".3em">General</text></svg>
+      {% elif user.permission_lvl == 3 %}
+        <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"></rect><text font-size='10' x="50%" y="50%" fill="#ffffff" dy=".3em">32x32</text></svg>
+      {% else %}
+        <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"></rect><text font-size='10' x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
+        {% endif %}
+      <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+        <div class="d-flex justify-content-between align-items-center w-100">
+          <strong class="text-gray-dark">{{user.u_name}}</strong>
+          <a href="#">Edit</a>
+        </div>
+        <span class="d-block">
+          <p>
+            user_id = {{ user.user_id }}<br>
+            customer_id = {{ user.customer_id }}<br>
+            site_id = {{ user.site_id }}<br>
+            u_name = {{ user.u_name }}<br>
+            u_passwd = {{ user.u_passwd }}<br>
+            permission_lvl = {{ user.permission_lvl }}<br>
+          </p>
+        </span>
+      </div>
+    </div>
+    {% endfor %}
+    
+  
+  </div>
+</main>
+
+
+{% endblock %}
