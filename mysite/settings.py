@@ -81,7 +81,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'test_db',
         'USER': 'bob9_test',
-        'PASSWORD': os.environ['DB_PASSWD'],
+        'PASSWORD': 'bob9-magam-mangham', #os.environ['DB_PASSWD'],
         'HOST': '34.64.120.154',
         'PORT':  '3306'
     }
@@ -127,4 +127,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, '.static')
+STATIC_ROOT = os.path.join(BASE_DIR, '.static_root')
