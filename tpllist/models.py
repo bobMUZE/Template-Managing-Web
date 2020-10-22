@@ -2,17 +2,20 @@ from django.db import models
 from django.urls import reverse
 from tpllist.modules import og_tag
 
-# Create your models here.
+
+
+from django.db import models
+
+
 class Customer(models.Model):
     customer_id = models.CharField(primary_key=True, max_length=45)
     customer_name = models.CharField(max_length=45)
     license_id = models.IntegerField()
-    join_date = models.DateField(blank=True, null=True)
-    site_name = models.CharField(max_length=200)
+    join_date = models.DateTimeField()
 
     class Meta:
         managed = False
-        db_table = 'Customer'
+        db_table = 'customer'
     
     def __str__(self):
         return self.title
@@ -31,29 +34,28 @@ class Customer(models.Model):
     
 
 
-class LicenseTable(models.Model):
-    license_id = models.IntegerField(primary_key=True)
-    subscript_period = models.IntegerField(blank=True, null=True)
-    customer_ids = models.CharField(max_length=45, blank=True, null=True)
+class License(models.Model):
+    license_id = models.AutoField(primary_key=True)
+    subscript_date = models.IntegerField()
+    max_sites = models.IntegerField()
 
     class Meta:
         managed = False
-        db_table = 'license_table'
+        db_table = 'license'
 
-class Sites(models.Model):
+
+class Site(models.Model):
     site_id = models.AutoField(primary_key=True)
     customer_id = models.CharField(max_length=45, blank=True, null=True)
-    site_url = models.CharField(unique=True, max_length=400, blank=True, null=True)
+    site_url = models.CharField(unique=True, max_length=300, blank=True, null=True)
     server_env = models.CharField(max_length=45, blank=True, null=True)
     framework = models.CharField(max_length=45, blank=True, null=True)
     is_root = models.IntegerField()
 
-
-
     class Meta:
         managed = False
-        db_table = 'sites'
-
+        db_table = 'site'
+    
     def __str__(self):
         return self.site_url
     
@@ -70,26 +72,22 @@ class Sites(models.Model):
         img_path = og_tag.find_og_img(url)
         print(img_path)
         return img_path
-        
 
 
-class Templates(models.Model):
+class Template(models.Model):
     tpl_id = models.AutoField(primary_key=True)
     customer_id = models.CharField(max_length=45, blank=True, null=True)
     site_id = models.IntegerField(blank=True, null=True)
-    permissions = models.CharField(max_length=45, blank=True, null=True)
-    module_id = models.CharField(max_length=45, blank=True, null=True)
-    tpl_url = models.CharField(db_column='tpl_URL', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    permission = models.CharField(max_length=45, blank=True, null=True)
+    module_id = models.IntegerField(blank=True, null=True)
     tpl_path = models.CharField(max_length=45, blank=True, null=True)
 
     class Meta:
-        verbose_name = 'tpl'
-        verbose_name_plural = 'tpls'
         managed = False
-        db_table = 'templates'
+        db_table = 'template'
 
 
-class Users(models.Model):
+class User(models.Model):
     user_id = models.AutoField(primary_key=True)
     customer_id = models.CharField(max_length=45, blank=True, null=True)
     site_id = models.IntegerField(blank=True, null=True)
@@ -99,5 +97,4 @@ class Users(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'users'
-
+        db_table = 'user'
