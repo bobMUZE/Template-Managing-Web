@@ -1,6 +1,11 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView,CreateView, UpdateView
+from django.http import HttpResponse
+from django.views.generic import ListView, DetailView,CreateView, UpdateView, TemplateView
 from django.urls import reverse, reverse_lazy
+
+import json
+
+from tpllist.modules.MainCrawling import CrawlingServer
 
 from tpllist.models import Customer, Site, Template, User
 
@@ -9,12 +14,12 @@ from tpllist.models import Customer, Site, Template, User
 # Main view - default 
 class MainView(ListView):
     model = Customer
-    template_name = "tpllist/main.html"
+    template_name = "main/main.html"
     context_object_name = "customers"
 
 class CustomerView(ListView):
     model = Customer
-    template_name = "tpllist/customer.html"
+    template_name = "customer_page/dashboard.html"
     context_object_name = "customers"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -23,6 +28,12 @@ class CustomerView(ListView):
         context['curr_customer'] = Customer.objects.filter(customer_id=self.kwargs['pk'])
         # context['customers'] =Customer.objects.all()
         return context
+
+def getCSVData(request):
+    keyword = request.GET.get('name')
+    csv_dict = csv_read.readCSVData(keyword)
+    return render(request, "dataset.html", csv_dict)
+
 
 class CustomerInfoView(DetailView):
     model = Customer
@@ -42,7 +53,7 @@ class CustomerSiteLV(ListView):
     context_object_name = "customers"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['sites'] = Site.objects.filter(customer_id=self.kwargs['pk'], is_root=1)
+        context['sites'] = Site.objects.filter(customer_id=self.kwargs['pk'], parent_site=-1)
         context['customer_id'] = self.kwargs['pk']
         context['curr_customer'] = Customer.objects.filter(customer_id=self.kwargs['pk'])
         # context['customers'] =Customer.objects.all()
@@ -54,22 +65,22 @@ class CustomerSiteDV(DetailView):
     def get_context_data(self, **kwargs):
         current_path = Site.objects.get(site_id=self.kwargs['pk'])
         # call get_regex and return raw string which gets regex with curr_path
-        path_regex = self.get_regex(current_path.site_url)
+        # path_regex = self.get_regex(current_path.site_url)
         context = super().get_context_data(**kwargs)
         context['sites'] = Site.objects.filter(site_id=self.kwargs['pk'])
-        context['subpages'] = Site.objects.filter(site_url__regex=path_regex)
+        context['subpages'] = Site.objects.filter(parent_site=self.kwargs['pk'])
         context['templates'] = Template.objects.filter(site_id=self.kwargs['pk'])
         context['curr_customer'] = Customer.objects.filter(customer_id=self.kwargs['customer_id'])
         context['curr_site'] = current_path
         context['customer_id'] = self.kwargs['customer_id']
         context['current_path'] = current_path.site_url
         return context
-    
-    def get_regex(self, curr_path):
-        curr_path = curr_path.replace('/', '\/')
-        # example = '^http:\/\/218.146.55.65\/[^\/]*\/$'
-        regex = "^"+curr_path+r"[^\/]*\/$"
-        return regex
+
+
+class CustomerDataAddView():
+    model = Customer
+    template_name = "tpllist/customer_data_add.html"
+    context_object_name = "customers"
     
         
 
@@ -102,3 +113,34 @@ class CustomerPermissionLV(ListView):
         context['customer_id'] = self.kwargs['pk']
         context['curr_customer'] = Customer.objects.filter(customer_id=self.kwargs['pk'])
         return context
+
+class CustomerInitView(TemplateView):
+    model = Customer
+    template_name = "tpllist/customer_init.html"
+    context_object_name = "customers"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        print(self.kwargs['pk'])
+        context['customer_id'] = self.kwargs['pk']
+        context['curr_customer'] = Customer.objects.filter(customer_id=self.kwargs['pk'])
+        return context
+
+class CustomerReportView(TemplateView):
+    model = Customer
+    template_name = "tpllist/customer_report.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['customer_id'] = self.kwargs['pk']
+        context['curr_customer'] = Customer.objects.filter(customer_id=self.kwargs['pk'])
+        return context
+
+
+def getSitemapData(request):
+    url = request.GET.get('url')
+    sitemap_data = CrawlingServer.showSitemap(url)
+    return HttpResponse(json.dumps(sitemap_data), content_type='application/json')
+
+
+
+# def addCustomerView():
+# render

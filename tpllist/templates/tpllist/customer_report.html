@@ -1,0 +1,124 @@
+{% extends 'customer_page/base.html' %}
+{% load static %}
+
+{% block content %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Report</h1>
+  </div>
+
+  <style>
+    .row {margin-bottom: 10px;}
+    .check-time {margin-top: 20px; background-color: #BFFCE8;}
+  </style>
+
+  <div class="data-table">
+      <div class="row">
+        <div class="col">
+            <!--log chart-->
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex">
+                  <h3 class="card-title">크롤링 로그 및 상세 모듈 로그</h3>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-vcenter card-table">
+                    <thead>
+                      <tr>
+                        <th>Time</th>
+                        <th>URL</th>
+                        <th>xpath</th>
+                        <th>module</th>
+                        <th>detection</th>
+                        <th>Detail</th>
+                      </tr>
+                    </thead>
+                    <tbody class="dropdown">
+                        <tr>
+                            <td >2020-11-17 23:11:17.812169</td>
+                            <td class="text-muted" >
+                            http://3.131.17.188/wordpress
+                            </td>
+                            <td class="text-muted" >/html/body/div/div/main/div[2]/div/div/div/div/div[2]/table/tbody/tr[5]/td[2]</td>
+                            <td class="text-muted" >html</td>
+                            <td class="text-muted" >false</td>
+                            <td class="text-muted" >
+                                <button type="button" class="btn btn-outline-success btn-sm report-btn dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown"aria-haspopup="true" aria-expanded="false">Detail</button>
+                            </td>
+                        
+                        </tr>
+                        <tbody  aria-labelledby="dropdownMenuButton">
+                            <tr>
+                                <td colspan=6>
+                                    <div>
+                                        "logdata": [
+			{
+				"submodule": 1,
+				"original_code": "(<p>안뇽!)",
+				"modified_code": "(<p>메롱!)"
+			},
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                      <tr>
+                        <td >2020-11-17 23:11:17.812169</td>
+                        <td class="text-muted" >
+                          http://3.131.17.188/wordpress
+                        </td>
+                        <td class="text-muted" >xpath</td>
+                        <td class="text-muted" >xss</td>
+                        <td class="text-muted" >false</td>
+                        <td class="text-muted" >
+                            <button type="button" class="btn btn-outline-success btn-sm report-btn">Detail</button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td >2020-11-17 23:11:17.812169</td>
+                        <td class="text-muted" >
+                          http://3.131.17.188/wordpress
+                        </td>
+                        <td class="text-muted" >xpath</td>
+                        <td class="text-muted" >html</td>
+                        <td class="text-muted" >false</td>
+                        <td class="text-muted" >
+                            <button type="button" class="btn btn-outline-success btn-sm report-btn">Detail</button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td >2020-11-17 23:11:17.812169</td>
+                        <td class="text-muted" >
+                          http://3.131.17.188/wordpress
+                        </td>
+                        <td class="text-muted" >xpath</td>
+                        <td class="text-muted" >xss</td>
+                        <td class="text-muted" >false</td>
+                        <td class="text-muted" >
+                            <button type="button" class="btn btn-outline-success btn-sm report-btn">Detail</button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td >2020-11-17 23:11:17.812169</td>
+                        <td class="text-muted" >
+                          http://3.131.17.188/wordpress
+                        </td>
+                        <td class="text-muted" >xpath</td>
+                        <td class="text-muted" >html</td>
+                        <td class="text-muted" >false</td>
+                        <td class="text-muted" >
+                            <button type="button" class="btn btn-outline-success btn-sm report-btn">Detail</button>
+                        </td>
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+  </div>
+
+</main>  
+{% endblock %}
+

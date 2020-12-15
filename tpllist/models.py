@@ -11,14 +11,14 @@ class Customer(models.Model):
     customer_id = models.CharField(primary_key=True, max_length=45)
     customer_name = models.CharField(max_length=45)
     license_id = models.IntegerField()
-    join_date = models.DateTimeField()
+    join_date = models.DateField()
 
     class Meta:
         managed = False
         db_table = 'customer'
     
     def __str__(self):
-        return self.title
+        return self.customer_name
     
     def get_absolute_url(self):
         return reverse("tpl_manage:customer_main", args=(self.customer_id, ))
@@ -26,11 +26,20 @@ class Customer(models.Model):
     def get_info_url(self):
         return reverse("tpl_manage:customer_info", args=(self.customer_id, ))
     
+    def get_init_url(self):
+        return reverse("tpl_manage:customer_init", args=(self.customer_id, ))
+
     def get_site_url(self):
         return reverse("tpl_manage:customer_site", args=(self.customer_id, ))
     
     def get_user_url(self):
         return reverse("tpl_manage:customer_user", args=(self.customer_id, ))
+
+    def get_add_url(self):
+        return reverse("tpl_manage:customer_user", args=(self.customer_id, ))
+    
+    def get_report_url(self):
+        return reverse("tpl_manage:customer_report", args=(self.customer_id, ))
     
 
 
@@ -48,9 +57,9 @@ class Site(models.Model):
     site_id = models.AutoField(primary_key=True)
     customer_id = models.CharField(max_length=45, blank=True, null=True)
     site_url = models.CharField(unique=True, max_length=300, blank=True, null=True)
-    server_env = models.CharField(max_length=45, blank=True, null=True)
-    framework = models.CharField(max_length=45, blank=True, null=True)
-    is_root = models.IntegerField()
+    # server_env = models.CharField(max_length=45, blank=True, null=True)
+    # framework = models.CharField(max_length=45, blank=True, null=True)
+    parent_site = models.IntegerField()
 
     class Meta:
         managed = False

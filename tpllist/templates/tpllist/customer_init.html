@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Customer Initialize</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+      <div class="btn-group mr-2">
+        <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+      </div>
+      <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+        <span data-feather="calendar"></span>
+        This week
+      </button>
+    </div>
+  </div>
+  
+  <script>
+    function getSitemapInfo(){
+      var target_url = $('input[name=target-url]').val();
+      $.ajax({
+          url: "/getSitemapInfo/",
+          type: "get",
+          dataType: "json",
+          contentType: "application/json",
+          data: {'url' : target_url},
+          success: function(resultData) {                    
+            console.log(resultData)
+            json_str = JSON.stringify(resultData, null, 4);
+            console.log(json_str)
+            $('div[name=sitemap]').css("display","block");
+            $('.sitemap-test').text(json_str)
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              console.log("employ data loading 에러\ncode : " + jqXHR.status + "\nerror message : " + jqXHR.responseText);
+          }
+      });
+    }
+
+    
+    
+</script>   
+
+  <div class="border my-3 p-3 bg-white rounded shadow-sm">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon3">Target URL</span>
+        </div>
+        <input type="text" name ='target-url' class="form-control" id="basic-url target-url" value="www.naver.com">
+        <button type="button" class="btn btn-outline-dark" onclick="getSitemapInfo();">Init</button>
+    </div>
+    <div name="sitemap" class="sitemap-container" style="display: none;">
+        <br><br>
+        <h1 class="display-4">Sitemap</h1>
+        <hr class="my-4">
+        <textarea class='sitemap-test' style="width: 100%; height: 500px;"></textarea>
+      </div>
+  </div>
+
+  
+
+</main>
+
+
+{% endblock %}

@@ -27,7 +27,7 @@ SECRET_KEY = 'rr*f*9!(+bu#kna+zh50t_%9l8_qujtpmyy56xck7y5dkz2q65'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "61.251.255.136", ".herokuapp.com" ]
+ALLOWED_HOSTS = ["localhost", "192.168.1.156"]
 
 
 # Application definition
@@ -89,8 +89,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'muze_db',
         'USER': 'muze-staff',
-        'PASSWORD': 'BOB9-magam-mangham', 
-        'HOST': '3.135.170.173',
+        'PASSWORD': 'BOB9-where-is-our-cloud', 
+        'HOST': '34.64.120.154',
         'PORT':  '3306'
     }
 }
@@ -122,11 +122,6 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
