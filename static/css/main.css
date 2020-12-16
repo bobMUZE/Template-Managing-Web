@@ -1,22 +1,27 @@
 html {height: 100%;}
-body {height: 100%; font-family: 'Ubuntu' , 'Noto Sans KR', sans-serif!important;}
+body {min-width: 1400px; height: 100%; font-family: 'Ubuntu' , 'Noto Sans KR', sans-serif!important;}
 
 a {color: #333;}
 a:hover {color: #333; font-weight: 700;}
+
+
 
 .muze-title-row {background-color: #070917;}
 
 .muze-title {height: 60px; display: flex; align-items: center; justify-content: center;}
 .muze-title a {font-weight: 700; color: #fff!important; font-size: 30px;}
 .muze-container {height: 100%;}
+.muze-container .col-2 {min-width: 225px;}
 
 
+.btn-group {display: flex; align-items: center; justify-content: center;}
+.period-btn {border: #212529 solid 2px; padding-top: 11px; font-size: 17px; width: 60px;}
 
-.container-tab {height: 100%;}
+.container-tab {max-height: 100%; min-width: 1600px;}
 .container-tab-card {height: 100%;}
 
 .container-tab-card .nav-item {width: 135px; text-align: center;}
-.container-tab-card .nav-item:last-child {width: 60px;}
+.container-tab-card .nav-item:last-child {width: 180px;}
 .container-tab-card .nav-item a {padding-top: 13px;border: #fff 0 solid;}
 .container-tab-card .nav-item a:hover {color: #333; border: #fff 0 solid; border-bottom: #001745 2px solid;}
 
@@ -25,11 +30,35 @@ a:hover {color: #333; font-weight: 700;}
 
 .dashboard-tap * {height: 52px;}
 
+.log-table {min-width: 1600px;}
+.log-table .table-responsive {max-height: 350px;}
+
+.log-progress-container {max-height: 200px;}
+.module-alert-left .card { height: 170px;}
+.module-alert-left .card-body {align-items: center; justify-content: center; display: flex;}
+.module-alert-left .card-body div { font-size: 50px; font-weight: 700;}
+.module-alert-card .card {height: 280px;}
+.log-progress-container > div {display: flex; align-items: center; justify-content: space-between;}
+
+
 
 .subheader { color: #6D7183;}
 .chart-header {font-size: 23px; font-weight: 700;}
 
-.apdex-no { z-index: 10; margin-top: -140px; font-size: 30px; font-weight: 700px;}
+.apdex-no { z-index: 10; margin-top: -93px; font-size: 16px; font-weight: 700px;}
 
 
 .response-code-chart > div {height: 50px;}
+
+.response-code-chart {font-size: 12px;}
+
+
+.performance-log-container {max-height: 750px;}
+.performance-log-container * {max-height: 750px;}
+.performance-log-container .table-responsive {max-height: 7s30px;}
+
+
+.log-progress-container #time { font-size: 12px; width: 90px;}
+.log-progress-container #module_name { font-size: 12px; }
+.log-progress-container h6 {cursor: pointer; width: 40px;}
+.log-progress-container .log-button {width: 40px;}

@@ -8,34 +8,57 @@
         <div class="card container-tab-card">
           <ul class="nav nav-tabs nav-tabs-alt dashboard-tap" data-bs-toggle="tabs">
             <li class="nav-item">
-              <a href="#monitoring" class="nav-link " data-bs-toggle="tab">Monitoring</a>
+              <a href="#monitoring" class="nav-link active " data-bs-toggle="tab">Monitoring</a>
             </li>
             <li class="nav-item">
-              <a href="#performance" class="nav-link active" data-bs-toggle="tab">Performance</a>
+              <a href="#performance" class="nav-link" data-bs-toggle="tab">Performance</a>
             </li>
             <li class="nav-item ms-auto">
-              <a href="#tabs-settings-10" class="nav-link p-0" title="Settings" data-bs-toggle="tab"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-              </a>
+                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked onclick="change_period(1);">
+                    <label class="period-btn btn btn-outline-dark" for="btnradio1">24H</label>
+                    
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" onclick="change_period(7);">
+                    <label class="period-btn btn btn-outline-dark" for="btnradio2">7D</label>
+                    
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" onclick="change_period(30);">
+                    <label class="period-btn btn btn-outline-dark" for="btnradio3">30D</label>
+                </div>
             </li>
           </ul>
           <div class="card-body">
             <div class="tab-content ">
-              <div class="tab-pane " id="monitoring">
-                <div class="row">
-                    <div class="col-2">
+              <div class="tab-pane active show" id="monitoring">
+                <div class=" row">
+                    <div class="module-alert-left col-2">
                         <div class="row">
                             <div class="col">
-                                Alert
+                                <div class="card text-white text-center bg-danger mb-3">
+                                    <div class="card-header">이벤트 발생</div>
+                                    <div class="card-body">
+                                        <div>1</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
-                                Complete
+                                <div class="card text-dark text-center bg-warning mb-3">
+                                    <div class="card-header">처리</div>
+                                    <div class="card-body">
+                                        <div>1</div>
+                                    </div>
+                                  </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
-                                Processing
+                                <div class="card text-white text-center bg-success mb-3">
+                                    <div class="card-header">완료</div>
+                                    <div class="card-body">
+                                        <div>1</div>
+                                    </div>
+                                  </div>
                             </div>
                         </div>
                     </div>
@@ -52,82 +75,95 @@
                         </div>
                         <div class="row module-alert-card mt-3">
                             <div class="col-4">
-                                <div class="card">
+                                <div class="card  mb-3">
+                                    <div class="card-header text-white bg-danger">이벤트 발생</div>
                                     <div class="card-body">
+                                        <div class="log-progress-container table-responsive">
+                                            <table class="table table-vcenter card-table">
+                                                <tbody class="dropdown">
+                                                    {% for data in log_progress_data_alert %}
+                                                      <tr>
+                                                        <!-- <td><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg></td>       -->
+                                                        <td id="time">{{ data.1 }}</td>
+                                                        <td id="module_name">{{ data.2 }}</td>
+                                                        
+                                                        <td class="log-button text-muted" onclick="changeLogProgress({{data.0}}, -1, 1)">
+                                                            <h6 class="m-0"><span class="badge bg-secondary">확인</span></h6>
+                                                        </td>
+                                                      </tr>
+                                                  {% endfor %}
+                                                </tbody>
+                                              </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card">
+                                    <div class="card-header text-white bg-warning">처리</div>
+                                    <div class="card-body">
+                                        <div class="log-progress-container table-responsive">
+                                            <table class="table table-vcenter card-table">
+                                                <tbody class="dropdown">
+                                                    {% for data in log_progress_data_process %}
+                                                    <tr>
+                                                        <!-- <td><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg></td>       -->
+                                                        <td id="time">{{ data.1 }}</td>
+                                                        <td id="module_name">{{ data.2 }}</td>
+                                                        <td class="log-button text-muted" onclick="changeLogProgress({{data.0}}, 0, -1)">
+                                                            <h6 class="m-0"><span class="badge bg-secondary">취소</span></h6>
+                                                        </td>
+                                                        <td class="log-button text-muted" onclick="changeLogProgress({{data.0}}, 0, 1)">
+                                                            <h6 class="m-0"><span class="badge bg-secondary">확인</span></h6>
+                                                        </td>
+                                                      </tr>
+                                                  {% endfor %}
+                                                </tbody>
+                                              </table>
+                                        </div>
                                         
                                     </div>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="card">
+                                    <div class="card-header text-white bg-success">완료</div>
                                     <div class="card-body">
-                                        
+                                        <div class="log-progress-container table-responsive">
+                                            <table class="table table-vcenter card-table">
+                                                <tbody class="dropdown">
+                                                    {% for data in log_progress_data_finish %}
+                                                        <tr>
+                                                            <!-- <td><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg></td>       -->
+                                                            <td id="time">{{ data.1 }}</td>
+                                                            <td id="module_name">{{ data.2 }}</td>
+                                                            <td class="log-button text-muted" onclick="changeLogProgress({{data.0}}, 1, -1)">
+                                                                <h6 class="m-0"><span class="badge bg-secondary">취소</span></h6>
+                                                            </td>
+                                                            <td class="log-button text-muted" onclick="changeLogProgress({{data.0}}, 1, 1)">
+                                                                <h6 class="m-0"><span class="badge bg-secondary">확인</span></h6>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                              </table>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="card">
-                                    <div class="card-body">
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-vcenter card-table">
-                                      <thead>
-                                        <tr>
-                                          <th>Timestamp</th>
-                                          <th>URL</th>
-                                          <th>module</th>
-                                          <th>detection</th>
-                                          <th>Detail</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody class="dropdown">
-                                          <tr>
-                                              <td >2020-11-17 23:11:17.812169</td>
-                                              <td class="text-muted" >
-                                              http://3.131.17.188/wordpress
-                                              </td>
-                                              <td class="text-muted" >html</td>
-                                              <td class="text-muted" >false</td>
-                                              <td class="text-muted" >
-                                                  <button type="button" class="btn btn-outline-success btn-sm report-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">Detail</button>
-                                              </td>
-                                          </tr>
-                                      </tbody>
-                                    </table>
-                                  </div>
                             </div>
                         </div>
                     </div>
                 </div>
               </div>
-              <div class="tab-pane active show" id="performance">
+              <div class="tab-pane " id="performance">
                 <div class="row">
                     <div class="col">
                         <div class="card">
                             <div class="card-body">
                                 <h3 class="card-title chart-header">페이지 응답 시간</h3>
                                 <div class="row">
-                                    <div class="col-4">
-                                        <div class="subheader text-center">24 Hours</div>
-                                        <div id="chart-line-stroke"></div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="subheader text-center">7 Days</div>
-                                        <div id="chart-line-stroke2"></div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="subheader text-center">30 Days</div>
-                                        <div id="chart-line-stroke3"></div>
+                                    <div class="col">
+                                        <div id="load-time-chart"></div>
                                     </div>
                                 </div>
                                 
@@ -136,58 +172,61 @@
                     </div>
                 </div>
                 <div class="row mt-3">
-                    <div class="col-5">
+                    <div class="col-3">
                         <div class="card">
                             <div class="row">
                                 <div class="col-5">
-                                    <div id="chart-total-sales" class="mt-3"></div>
-                                    <div class="apdex-no text-center"> 2% </div>
+                                    <div id="apdex-chart" class="mt-3"></div>
+                                    <div class="apdex-no text-center"> 1.00 </div>
                                 </div>
                                 <div class="col-7">
                                     <div class="card-body">
-                                        <h3 class="card-title chart-header">Apdex
-                                            <a role="button" tabindex="0" title="Apdex = ((status code (200) count * 1 ) + (status code (300) count * 0.5 )) / total count">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon apdex-hint ms-1" width="24" height="24" viewBox="0 0 40 40" stroke-width="2" stroke="#212529" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="12" stroke="#efd143"
-                                            stroke-width="1" fill="#FEFAD9" /> <path d="M8 8a3.5 3 0 0 1 3.5 -3h1a3.5 3 0 0 1 3.5 3a3 3 0 0 1 -2 3a3 4 0 0 0 -2 4" fill="#FEFAD9" /><line x1="12" y1="19" x2="12" y2="19.01" /></svg></a>
+                                        <h3 class="card-title chart-header" style="display: flex; justify-content: space-between;">
+                                            <div>
+                                                Apdex
+                                                <a role="button" tabindex="0" title="Apdex = ((status code (200) count * 1 ) + (status code (300) count * 0.5 )) / total count">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon apdex-hint ms-1" width="24" height="24" viewBox="0 0 40 40" stroke-width="2" stroke="#212529" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="12" stroke="#efd143"
+                                                stroke-width="1" fill="#FEFAD9" /> <path d="M8 8a3.5 3 0 0 1 3.5 -3h1a3.5 3 0 0 1 3.5 3a3 3 0 0 1 -2 3a3 4 0 0 0 -2 4" fill="#FEFAD9" /><line x1="12" y1="19" x2="12" y2="19.01" /></svg></a>
+                                            </div>
+                                            <!-- <div>
+                                                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                                                    <input type="radio" class="btn-check" name="apdex-button" id="btnradio1" autocomplete="off" checked onclick="">
+                                                    <label class="btn btn-outline-primary" for="btnradio1">24H</label>
+                                                    
+                                                    <input type="radio" class="btn-check" name="apdex-button" id="btnradio2" autocomplete="off" onclick="">
+                                                    <label class="btn btn-outline-primary" for="btnradio2">7D</label>
+                                                    
+                                                    <input type="radio" class="btn-check" name="apdex-button" id="btnradio3" autocomplete="off" onclick="">
+                                                    <label class="btn btn-outline-primary" for="btnradio3">30D</label>
+                                                    </div>
+                                            </div> -->
+                                            
                                         </h3>
-                                        <div class="row mt-4 mb-3">
+                                        <div class="row mt-4">
                                             <div class="col mb-1">
                                                 <div class="row response-code-chart">
                                                     <div class="col-12">
                                                         <div class="row justify-content-between">
-                                                            <div class="col-4">정상 (200)</div>
-                                                            <div class="col-4 text-end">98 %</div>
+                                                            <div class="col-8">정상(200, 300)</div>
+                                                            <div class="apdex-200 col-4 text-end">98%</div>
                                                         </div>
                                                         <div class="row mt-2">
                                                             <div class="col">
                                                                 <div class="progress" style="height: 5px;">
-                                                                    <div class="progress-bar" role="progressbar" style="width: 98%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    <div class="apdex-200-bar progress-bar" role="progressbar" style="width: 98%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                                                                 </div>    
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="row justify-content-between">
-                                                            <div class="col-4">경고(300)</div>
-                                                            <div class="col-4 text-end">1 %</div>
+                                                            <div class="col-8">오류(400, 500)</div>
+                                                            <div class="apdex-400 col-4 text-end">1%</div>
                                                         </div>
                                                         <div class="row mt-2">
                                                             <div class="col">
                                                                 <div class="progress" style="height: 5px;">
-                                                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 1%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>    
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <div class="row justify-content-between">
-                                                            <div class="col-6">오류(400, 500)</div>
-                                                            <div class="col-4 text-end">1 %</div>
-                                                        </div>
-                                                        <div class="row mt-2">
-                                                            <div class="col">
-                                                                <div class="progress" style="height: 5px;">
-                                                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 1%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    <div class="apdex-400-bar progress-bar bg-danger" role="progressbar" style="width: 1%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                                                                 </div>    
                                                             </div>
                                                         </div>
@@ -201,61 +240,21 @@
                             
                         </div>
                     </div>
-                    <div class="col-7">
+                    <div class="col-3">
                         <div class="card">
-                            <div class="card-body">
-                                <div class="row justify-content-between">
-                                    <div class="col-3">
-                                        <h3 class="card-title chart-header text-center">Status Code</h3>
-                                    </div>
-                                    <div class="col-3">
-                                        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                                            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
-                                            <label class="btn btn-outline-primary" for="btnradio1">24H</label>
-                                          
-                                            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-                                            <label class="btn btn-outline-primary" for="btnradio2">7D</label>
-                                          
-                                            <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
-                                            <label class="btn btn-outline-primary" for="btnradio3">30D</label>
-                                          </div>
-                                    </div>
-                                </div>
-                                <div id="chart-completion-tasks9" class="mt-4"></div>
+                            <h3 class="card-title chart-header">400, 500 response url libs</h3>
+                            <div class="url-error-container card-body">
+                                
+                                4,500 url placeholder
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col">
+                    <div class="col-3">
                         <div class="card">
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-vcenter card-table">
-                                      <thead>
-                                        <tr>
-                                          <th>Timestamp</th>
-                                          <th>URL</th>
-                                          <th>request_time</th>
-                                          <th>status_code</th>
-                                          <th>Detail</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody class="dropdown">
-                                          <tr>
-                                              <td >2020-11-17 23:11:17.812169</td>
-                                              <td class="text-muted" >
-                                              http://3.131.17.188/wordpress
-                                              </td>
-                                              <td class="text-muted" >html</td>
-                                              <td class="text-muted" >false</td>
-                                              <td class="text-muted" >
-                                                  <button type="button" class="btn btn-outline-success btn-sm report-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">Detail</button>
-                                              </td>
-                                          </tr>
-                                      </tbody>
-                                    </table>
-                                  </div>
+                            <h3 class="card-title chart-header">load time</h3>
+                            <div class="url-load-container card-body">
+                                
+                                4,500 url placeholder
                             </div>
                         </div>
                     </div>
@@ -270,28 +269,69 @@
         </div>
       </div>
 </div>
+<div class="row log-table">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-vcenter card-table">
+                      <thead>
+                        <tr>
+                          <th>Timestamp</th>
+                          <th>URL</th>
+                          <th>status_code</th>
+                          <th>request_time</th>
+                          <th>module</th>
+                          <th>detection</th>
+                          <th>Detail</th>
+                        </tr>
+                      </thead>
+                      <tbody class="dropdown">
+                        {% for data_row in total_data %}
+                            <tr>
+                                <td>{{ data_row.0 }}</td>
+                                <td><a href="{{ data_row.1 }}">{{ data_row.1 }}</a></td>
+                                <td>{{ data_row.3 }}</td>
+                                <td>{{ data_row.4 }}</td>
+                                <td>{{ data_row.5 }}</td>
+                                <td>{{ data_row.6 }}</td>
+                                <td class="text-muted" >
+                                    <button type="button" class="btn btn-outline-success btn-sm report-btn" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="showLogModal({{ data_row }})">Detail</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" style="display: none;" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <h5 class="modal-title" id="exampleModalLabel">로그 상세 내역</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <dl class="row">
-                <dt class="col-5">Date:</dt>
-                <dd class="col-7">2020-01-05 16:42:29 UTC</dd>
-                <dt class="col-5">Account:</dt>
-                <dd class="col-7">tabler</dd>
-                <dt class="col-5">Location:</dt>
-                <dd class="col-7"><span class="flag flag-country-pl"></span>
-                Poland</dd>
-                <dt class="col-5">IP Address:</dt>
-                <dd class="col-7">46.113.11.3</dd>
-                <dt class="col-5">Operating system:</dt>
-                <dd class="col-7">OS X 10.15.2 64-bit</dd>
-                <dt class="col-5">Browser:</dt>
-                <dd class="col-7">Chrome</dd>
+            <dl class="row log-modal-container">
+                <dt class="col-3">Time:</dt>
+                <dd id="timestamp" class="col-9">2020-01-05 16:42:29 UTC</dd>
+                <dt class="col-3">URL:</dt>
+                <dd id="url" class="col-9">www.sample.com</dd>
+                <dt class="col-3">Xpath:</dt>
+                <dd id="xpath" class="col-9">sample xpath</dd>
+                <dt class="col-3">응답 코드:</dt>
+                <dd id="status_code" class="col-9">999</dd>
+                <dt class="col-3">응답 시간:</dt>
+                <dd id="request_time" class="col-9">0.0ms</dd>
+                <dt class="col-3">메인 모듈:</dt>
+                <dd id="module" class="col-9">Module Name</dd>
+                <dt class="col-3">탐지 여부:</dt>
+                <dd id="detection" class="col-9">True</dd>
+                <dt class="col-3">처리 여부:</dt>
+                <dd id="progress" class="col-9">Module Name</dd>
             </dl>
         </div>
         <div class="modal-footer">

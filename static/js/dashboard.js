@@ -1,208 +1,129 @@
+function change_period(period){
+    getLoadData(period);
+    getApdexData(period);
+    getModuleData(period);
+}
+
+
+function getLoadData(period, target_id){
+    $.ajax({
+        url: "./getLoadData/",
+        type: "get",
+        dataType: "json",
+        contentType: "application/json",
+        data: {'period': period},
+        success: function(resultData) {
+            console.log(resultData)
+            $('#load-time-chart > div').remove()
+            loadTimeRefresh(resultData, target_id)
+
+        //   $('#covid-change-data').text(changeRatio + ' ' + resultData['change_value'] + ' 명')
+        //   changeCovidProgressbar(resultData['today_natDefCnt'], resultData['today_natDeathCnt'])
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            // 에러 로그는 아래처럼 확인해볼 수 있다.
+            console.log("covid data loading 에러\ncode : " + jqXHR.status + "\nerror message : " + jqXHR.responseText);
+        }
+    });
+}
 
 // @formatter:off
-document.addEventListener("DOMContentLoaded", function () {
-window.ApexCharts && (new ApexCharts(document.getElementById('chart-line-stroke'), {
-    chart: {
-        type: "line",
-        fontFamily: 'inherit',
-        height: 160,
-        parentHeightOffset: 0,
+function loadTimeRefresh(result_data, target_id){
+    var options = {
+        series: [{
+        name: 'request_time',
+        data: result_data['request_time']
+      }],
+        chart: {
+        type: 'area',
+        stacked: false,
+        height: 350,
+        zoom: {
+          type: 'x',
+          enabled: true,
+          autoScaleYaxis: true
+        },
         toolbar: {
-            show: false,
+          autoSelected: 'zoom'
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      markers: {
+        size: 0,
+      },
+      fill: {
+        type: 'gradient',
+        gradient: {
+          shadeIntensity: 1,
+          inverseColors: false,
+          opacityFrom: 0.5,
+          opacityTo: 0,
+          stops: [0, 90, 100]
         },
-        animations: {
-            enabled: false
+      },
+      xaxis: {
+        categories: result_data['time'],
+        type: 'datetime',
+        datetimeUTC: false,
+        datetimeFormatter: {
+            year: 'yyyy',
+            month: "MM 'yy",
+            day: 'dd MM',
+            hour: 'HH:mm',
         },
-    },
-    fill: {
-        opacity: 1,
-    },
-    stroke: {
-        width: 2,
-        lineCap: "round",
-        curve: "straight",
-    },
-    series: [{
-        name: "Development",
-        data: [8, 10, 11, 12, 20, 27, 30]
-    },{
-        name: "Marketing",
-        data: [3, 16, 17, 19, 20, 30, 30]
-    },{
-        name: "Sales",
-        data: [7, 10, 11, 18, 18, 18, 24]
-    }],
-    grid: {
-        padding: {
-            top: -20,
-            right: 0,
-            left: -4,
-            bottom: -4
-        },
-        strokeDashArray: 4,
-    },
-    xaxis: {
         labels: {
-            padding: 0
-        },
-        tooltip: {
-            enabled: false
-        },
-        categories: ["2013", "2014", "2015", "2016", "2017", "2018", "2019"],
-    },
-    yaxis: {
-        labels: {
-            padding: 4
-        },
-    },
-    colors: ["#ff922b", "#206bc4", "#5eba00"],
-    legend: {
-        show: false,
-    },
-})).render();
-});
+            format: 'yyyy-MM-d HH:mm',
+          }
+      },
+      tooltip: {
+        shared: false,
+      }
+    }
+
+    var chart = new ApexCharts(document.getElementById('load-time-chart'), options);
+    chart.render();
+}
+document.addEventListener("DOMContentLoaded", getLoadData(1, "load-time-chart"));
 // @formatter:on
 
 
+function getApdexData(period){
+    $.ajax({
+        url: "./getApdexData/",
+        type: "get",
+        dataType: "json",
+        contentType: "application/json",
+        data: {'period': period},
+        success: function(resultData) {
+            console.log(resultData)
 
-// @formatter:off
-document.addEventListener("DOMContentLoaded", function () {
-    window.ApexCharts && (new ApexCharts(document.getElementById('chart-line-stroke2'), {
-        chart: {
-            type: "line",
-            fontFamily: 'inherit',
-            height: 160,
-            parentHeightOffset: 0,
-            toolbar: {
-                show: false,
-            },
-            animations: {
-                enabled: false
-            },
+            $('#apdex-chart > div').remove()
+            $('.apdex-no').text(resultData["apdex"])
+            $('.apdex-200').text(resultData['200'] + '%')
+            $('.apdex-200-bar').css('width', resultData['200']*100 + '%');
+            $('.apdex-400').text(resultData['400'] + '%')
+            $('.apdex-400-bar').css('width', resultData['400']*100 + '%');
+
+            $('.url-error-container').text(resultData['url'])
+            apdexRefresh(resultData)
+
+        //   $('#covid-change-data').text(changeRatio + ' ' + resultData['change_value'] + ' 명')
+        //   changeCovidProgressbar(resultData['today_natDefCnt'], resultData['today_natDeathCnt'])
         },
-        fill: {
-            opacity: 1,
-        },
-        stroke: {
-            width: 2,
-            lineCap: "round",
-            curve: "straight",
-        },
-        series: [{
-            name: "Development",
-            data: [8, 10, 11, 12, 20, 27, 30]
-        },{
-            name: "Marketing",
-            data: [3, 16, 17, 19, 20, 30, 30]
-        },{
-            name: "Sales",
-            data: [7, 10, 11, 18, 18, 18, 24]
-        }],
-        grid: {
-            padding: {
-                top: -20,
-                right: 0,
-                left: -4,
-                bottom: -4
-            },
-            strokeDashArray: 4,
-        },
-        xaxis: {
-            labels: {
-                padding: 0
-            },
-            tooltip: {
-                enabled: false
-            },
-            categories: ["2013", "2014", "2015", "2016", "2017", "2018", "2019"],
-        },
-        yaxis: {
-            labels: {
-                padding: 4
-            },
-        },
-        colors: ["#ff922b", "#206bc4", "#5eba00"],
-        legend: {
-            show: false,
-        },
-    })).render();
+        error: function(jqXHR, textStatus, errorThrown) {
+            // 에러 로그는 아래처럼 확인해볼 수 있다.
+            console.log("covid data loading 에러\ncode : " + jqXHR.status + "\nerror message : " + jqXHR.responseText);
+        }
     });
-    // @formatter:on
+}
 
-
-
-
-// @formatter:off
-document.addEventListener("DOMContentLoaded", function () {
-    window.ApexCharts && (new ApexCharts(document.getElementById('chart-line-stroke3'), {
+function apdexRefresh(result_data){
+    var options = {
+        series: result_data['status_code'],
         chart: {
-            type: "line",
-            fontFamily: 'inherit',
-            height: 160,
-            parentHeightOffset: 0,
-            toolbar: {
-                show: false,
-            },
-            animations: {
-                enabled: false
-            },
-        },
-        fill: {
-            opacity: 1,
-        },
-        stroke: {
-            width: 2,
-            lineCap: "round",
-            curve: "straight",
-        },
-        series: [{
-            name: "Development",
-            data: [8, 10, 11, 12, 20, 27, 30]
-        },{
-            name: "Marketing",
-            data: [3, 16, 17, 19, 20, 30, 30]
-        },{
-            name: "Sales",
-            data: [7, 10, 11, 18, 18, 18, 24]
-        }],
-        grid: {
-            padding: {
-                top: -20,
-                right: 0,
-                left: -4,
-                bottom: -4
-            },
-            strokeDashArray: 4,
-        },
-        xaxis: {
-            labels: {
-                padding: 0
-            },
-            tooltip: {
-                enabled: false
-            },
-            categories: ["2013", "2014", "2015", "2016", "2017", "2018", "2019"],
-        },
-        yaxis: {
-            labels: {
-                padding: 4
-            },
-        },
-        colors: ["#ff922b", "#206bc4", "#5eba00"],
-        legend: {
-            show: false,
-        },
-    })).render();
-    });
-    // @formatter:on
-
-
-// @formatter:off
-document.addEventListener("DOMContentLoaded", function () {
-    window.ApexCharts && (new ApexCharts(document.getElementById('chart-total-sales'),     {
-        series: [76, 67, 61],
-        chart: {
-        height: 250,
+        height: 180,
         type: 'radialBar',
       },
       plotOptions: {
@@ -226,14 +147,14 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         }
       },
-      colors: ['#1ab7ea', '#0084ff', '#39539E' ],
-      labels: ['정상', '경고', '오류'],
+      colors: ['#1ab7ea', '#0084ff' ],
+      labels: ['정상', '경고'],
       legend: {
         show: true,
         floating: true,
-        fontSize: '13px',
+        fontSize: '10px',
         position: 'left',
-        offsetX: 20,
+        offsetX: -10,
         offsetY: 0,
         labels: {
           useSeriesColors: true,
@@ -256,98 +177,58 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         }
       }]
-      })).render();
-});
-// @formatter:on
+      }
+
+      var chart = new ApexCharts(document.getElementById('apdex-chart'), options);
+      chart.render();
+}
+document.addEventListener("DOMContentLoaded", getApdexData(1));
 
 
 // @formatter:off
-document.addEventListener("DOMContentLoaded", function () {
-    var options ={
-        series: [{
-        name: 'PRODUCT A',
-        data: [44, 55, 41, 67, 22, 43]
-      }, {
-        name: 'PRODUCT B',
-        data: [91, 68, 25, 2, 5, 33]
-      }],
-        chart: {
-        type: 'bar',
-        height: 160,
-        stacked: true,
-        toolbar: {
-          show: true
+function getModuleData(period){
+    $.ajax({
+        url: "./getModuleData/",
+        type: "get",
+        dataType: "json",
+        contentType: "application/json",
+        data: {'period': period},
+        success: function(resultData) {
+            $('#module-bar-chart > div').remove()
+            moduleChartRefresh(resultData);
+
+        //   $('#covid-change-data').text(changeRatio + ' ' + resultData['change_value'] + ' 명')
+        //   changeCovidProgressbar(resultData['today_natDefCnt'], resultData['today_natDeathCnt'])
         },
-        zoom: {
-          enabled: true
+        error: function(jqXHR, textStatus, errorThrown) {
+            // 에러 로그는 아래처럼 확인해볼 수 있다.
+            console.log("covid data loading 에러\ncode : " + jqXHR.status + "\nerror message : " + jqXHR.responseText);
         }
-      },
-      responsive: [{
-        breakpoint: 480,
-        options: {
-          legend: {
-            position: 'bottom',
-            offsetX: -10,
-            offsetY: 0
-          }
-        }
-      }],
-      plotOptions: {
-        bar: {
-          horizontal: false,
-        },
-      },
-      xaxis: {
-        type: 'category',
-        tickAmount: 3,
-        tickPlacement: 'on',
-        categories: [['2020-12-13', '13:02:55.948'],'2020-12-13T13:02:55.948', '2020-12-13T13:02:56.722', '2020-12-13T13:02:56.726', '2020-12-13T13:02:57.802', '2020-12-13T13:02:58.622', '2020-12-13T13:03:03.531'
-        ],
-        labels: {
-            rotate: 0
-          }
-      },
+    });
+}
 
-      tooltip: {
-        x: {
-            show: true,
-            format: 'yyyy-MM-dd HH:mm:ss.fff',
-        },
-      },
-      legend: {
-        position: 'right',
-        offsetY: 40
-      },
-      fill: {
-        opacity: 1
-      }
-      }
-
-    var chart = new ApexCharts(document.querySelector("#chart-completion-tasks9"), options);
-        chart.render();
-});
-// @formatter:on
-
-
-// @formatter:off
-document.addEventListener("DOMContentLoaded", function () {
-    window.ApexCharts && (new ApexCharts(document.getElementById('module-bar-chart'), {
+function moduleChartRefresh(result_data){
+    var options = {
         series: [{
-        name: 'Marine Sprite',
-        data: [44, 55, 41]
+        name: 'XSS',
+        data: result_data['xss']
       }, {
-        name: 'Striking Calf',
-        data: [53, 32, 33]
+        name: '소스코드 위변조',
+        data: result_data["code"]
       }, {
-        name: 'Tank Picture',
-        data: [12, 17, 11]
+        name: 'URL 안정성 검사',
+        data: result_data["url_safe"]
       }, {
-        name: 'Bucket Slope',
-        data: [9, 7, 5]
+        name: 'JQuery 위변조',
+        data: result_data["jquery"]
       }, {
-        name: 'Reborn Kid',
-        data: [25, 12, 19]
+        name: 'iframe 도메인 탐지',
+        data: result_data["iframe"]
+      }, {
+        name: 'ML_피싱 URL 탐지',
+        data: result_data["phishing"]
       }],
+        colors: ['#1ab7ea', '#6681C4', '#39539E', '#0A144B', '#A4FFFB'],
         chart: {
         type: 'bar',
         height: 200,
@@ -372,23 +253,15 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       xaxis: {
         categories: ["웹공격", "위변조 탐지", "ML- 파싱 URL 탐지"],
-        labels: {
-          formatter: function (val) {
-            return val + "K"
-          }
-        }
+
+        style: {
+            fontWeight: 700,
+        },
       },
       yaxis: {
         title: {
           text: undefined
         },
-      },
-      tooltip: {
-        y: {
-          formatter: function (val) {
-            return val + "K"
-          }
-        }
       },
       fill: {
         opacity: 1
@@ -396,6 +269,61 @@ document.addEventListener("DOMContentLoaded", function () {
       legend: {
         show: false,
       }
-      })).render();
-});
-// @formatter:on
+      }
+
+    var chart = new ApexCharts(document.getElementById('module-bar-chart'), options);
+    chart.render();
+}
+document.addEventListener("DOMContentLoaded", getModuleData(1));
+
+function getLogProgressData(){
+    $.ajax({
+        url: "./getModuleData/",
+        type: "get",
+        dataType: "json",
+        contentType: "application/json",
+        data: {'period': period},
+        success: function(resultData) {
+            $('#module-bar-chart > div').remove()
+            moduleChartRefresh(resultData);
+
+        //   $('#covid-change-data').text(changeRatio + ' ' + resultData['change_value'] + ' 명')
+        //   changeCovidProgressbar(resultData['today_natDefCnt'], resultData['today_natDeathCnt'])
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            // 에러 로그는 아래처럼 확인해볼 수 있다.
+            console.log("covid data loading 에러\ncode : " + jqXHR.status + "\nerror message : " + jqXHR.responseText);
+        }
+    });
+}
+
+function changeLogProgress(time, progress, change){
+    console.log(change)
+    $.ajax({
+        url: "./changeLogProgress/",
+        type: "get",
+        dataType: "json",
+        contentType: "application/json",
+        data: {'time': time, "progress": progress, "change": change},
+        success: function(resultData) {
+            location.reload();
+            // reload 
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            // 에러 로그는 아래처럼 확인해볼 수 있다.
+            console.log("changeLogProgress data loading 에러\ncode : " + jqXHR.status + "\nerror message : " + jqXHR.responseText);
+        }
+    });
+} 
+
+function showLogModal(logdata){
+    console.log(logdata)
+    $('.log-modal-container #timestamp').text(logdata[0])
+    $('.log-modal-container #url').text(logdata[1])
+    $('.log-modal-container #xpath').text(logdata[2])
+    $('.log-modal-container #status_code').text(logdata[3])
+    $('.log-modal-container #request_time').text(logdata[4])
+    $('.log-modal-container #module').text(logdata[5])
+    $('.log-modal-container #detection').text(logdata[6])
+    $('.log-modal-container #progress').text(logdata[7])
+}

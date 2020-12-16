@@ -11,6 +11,12 @@ urlpatterns = [
 
 
     path('main/<pk>/', views.CustomerView.as_view(), name="customer_main"),
+    path('main/<pk>/getStatusCodeData/', views.getStatusCodeData),
+    path('main/<pk>/getLoadData/', views.getLoadData),
+    path('main/<pk>/getApdexData/', views.getApdexData),
+    path('main/<pk>/getModuleData/', views.getModuleData),
+    path('main/<pk>/changeLogProgress/', views.changeLogProgress),
+
     path('main/<pk>/init', views.CustomerInitView.as_view(), name="customer_init"),
     path('main/<pk>/info', views.CustomerInfoView.as_view(), name="customer_info"),
     path('main/<pk>/site', views.CustomerSiteLV.as_view(), name="customer_site"),

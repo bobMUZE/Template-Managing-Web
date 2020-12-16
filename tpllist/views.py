@@ -5,7 +5,8 @@ from django.urls import reverse, reverse_lazy
 
 import json
 
-from tpllist.modules.MainCrawling import CrawlingServer
+from tpllist.modules.MainCrawlingServer import CrawlingServer
+import tpllist.modules.MongoDBManager as MongoDBManager
 
 from tpllist.models import Customer, Site, Template, User
 
@@ -26,13 +27,42 @@ class CustomerView(ListView):
         context['sites'] = Site.objects.filter(customer_id=self.kwargs['pk'])
         context['customer_id'] = self.kwargs['pk']
         context['curr_customer'] = Customer.objects.filter(customer_id=self.kwargs['pk'])
+        context['total_data'] = MongoDBManager.getTotalData(int(1))
+        context['log_progress_data_alert'] = MongoDBManager.getLogProgressData(int(1))['-1']
+        context['log_progress_data_process'] = MongoDBManager.getLogProgressData(int(1))['0']
+        context['log_progress_data_finish'] = MongoDBManager.getLogProgressData(int(1))['1']
         # context['customers'] =Customer.objects.all()
         return context
 
-def getCSVData(request):
-    keyword = request.GET.get('name')
-    csv_dict = csv_read.readCSVData(keyword)
-    return render(request, "dataset.html", csv_dict)
+def getStatusCodeData(request, pk):
+    period = request.GET.get('period')
+    status_code_data = MongoDBManager.getStatusCodeData(int(period))
+    return HttpResponse(json.dumps(status_code_data), content_type='application/json')
+
+def getLoadData(request, pk):
+    period = request.GET.get('period')
+    load_time_data = MongoDBManager.getLoadData(int(period))
+    return HttpResponse(json.dumps(load_time_data), content_type='application/json')
+
+def getApdexData(request, pk):
+    period = request.GET.get('period')
+    apdex_data = MongoDBManager.getApdexData(int(period))
+    return HttpResponse(json.dumps(apdex_data), content_type='application/json')
+
+def getModuleData(request, pk):
+    period = request.GET.get('period')
+    module_data = MongoDBManager.getModuleData(int(period))
+    return HttpResponse(json.dumps(module_data), content_type='application/json')
+
+def changeLogProgress(request, pk):
+    time = request.GET.get('time')
+    progress = request.GET.get('progress')
+    change = request.GET.get('change')
+    result = MongoDBManager.changeLogProgress(float(time), int(progress), int(change))
+    if result:
+        return HttpResponse(json.dumps({}), content_type='application/json')
+
+
 
 
 class CustomerInfoView(DetailView):
