@@ -4,9 +4,9 @@ import datetime
 import numpy as np 
 
 class MongoDbManager:
-    def __init__(self):
+    def __init__(self, cid):
         self.client = pymongo.MongoClient("mongodb://muze_root:this-is-root-passwd@3.13.31.198:27017/")
-        self.collection = self.client['muzeDB']['logCollection']
+        self.collection = self.client['muzeDB'][cid]
 
     def searchDB(self, query):
         return self.collection.find(query).sort("time", -1)          
@@ -15,6 +15,21 @@ def filterByDate(manager, date):
     time_query = {"time": {'$gte':time()-86400*date}}
     data = manager.searchDB(time_query)
     return data
+
+def filterByLoadTime(manager,  date):
+    time_query = {"time": {'$gte':time()-86400*date}}
+    data = manager.collection.find(time_query).sort("request_time", -1).limit(5)    
+    return data
+
+def getMaxLoadURL(manager, period):
+    data = filterByLoadTime(manager, period) 
+
+    urls = []
+    for d in data:
+        row = [d['url'], d['request_time']]
+        urls.append(row)
+    
+    return urls
 
 def sortByColumn(data):
     sorted_data = {}
@@ -45,8 +60,8 @@ def convert_datetime(unixtime):
     return date[:-3] # format : str
 
 
-def getStatusCodeData(period) :
-    dbManager = MongoDbManager()
+def getStatusCodeData(period, cid) :
+    dbManager = MongoDbManager(cid)
     data = filterByDate(dbManager, period)
     
     statusCodeData = {}
@@ -65,8 +80,8 @@ def getStatusCodeData(period) :
     
     return statusCodeData
 
-def getPerformanceData(period):
-    dbManager = MongoDbManager()
+def getPerformanceData(period, cid):
+    dbManager = MongoDbManager(cid)
     data = filterByDate(dbManager, period)
     
     performance_data = []
@@ -95,8 +110,8 @@ def getPerformanceData(period):
 
     return performance_data
 
-def getMonitoringData(period):
-    dbManager = MongoDbManager()
+def getMonitoringData(period, cid):
+    dbManager = MongoDbManager(cid)
     data = filterByDate(dbManager, period)
     
     monitoring_data = []
@@ -118,8 +133,8 @@ def getMonitoringData(period):
 
     return monitoring_data
 
-def getLoadData(period):
-    dbManager = MongoDbManager()
+def getLoadData(period, cid):
+    dbManager = MongoDbManager(cid)
     data = filterByDate(dbManager, period)
     
     load_data = {}
@@ -140,8 +155,8 @@ def getLoadData(period):
 
     return load_data
 
-def getApdexData(period):
-    dbManager = MongoDbManager()
+def getApdexData(period, cid):
+    dbManager = MongoDbManager(cid)
     data = filterByDate(dbManager, int(period))
     
     apdex_data = {}
@@ -157,7 +172,9 @@ def getApdexData(period):
 
         elif status_code == 400 or status_code == 500:
             apdex_data['status_code'][1] += 1
-            apdex_data['url'].append(d["url"])
+            
+            row = [d["url"], status_code]
+            apdex_data['url'].append(row)
     
     apdex_data['apdex'] = f"{(apdex_data['status_code'][0] + apdex_data['status_code'][1]*0.5) / total_cnt:.3f}"
     apdex_data['200'] = f"{apdex_data['status_code'][0]/total_cnt:.3f}"
@@ -168,8 +185,8 @@ def getApdexData(period):
 
     return apdex_data
 
-def getModuleData(period):
-    dbManager = MongoDbManager()
+def getModuleData(period, cid):
+    dbManager = MongoDbManager(cid)
     data = filterByDate(dbManager, int(period))
     
     module_data = {}
@@ -210,9 +227,9 @@ def getModuleData(period):
 
     return module_data
 
-def changeLogProgress(time, progress, change):
+def changeLogProgress(time, progress, change, cid):
     # time(datetime) -> unix
-    dbManager = MongoDbManager()
+    dbManager = MongoDbManager(cid)
     query = {"time": time}
     dbManager.collection.update_one(query, {"$set" : {'progress': progress + change}})
 
@@ -220,8 +237,8 @@ def changeLogProgress(time, progress, change):
 
     # 지금 해야하는거 : 로그 문서 하나 찾아서 거기 progress를 -1에서 0으로 바꾸기
 
-def getLogProgressData(period):
-    dbManager = MongoDbManager()
+def getLogProgressData(period, cid):
+    dbManager = MongoDbManager(cid)
     data = filterByDate(dbManager, period) 
     
     log_progress_data = {}
@@ -245,8 +262,8 @@ def getLogProgressData(period):
 
     return log_progress_data
 
-def getLoadTimeMinMax(period):
-    dbManager = MongoDbManager()
+def getLoadTimeMinMax(period, cid):
+    dbManager = MongoDbManager(cid)
     data = filterByDate(dbManager, period) 
     #  Min max median
     load_data = {}
@@ -272,15 +289,85 @@ def getLoadTimeMinMax(period):
 
     return load_data
 
-def getTotalData(period):
-    dbManager = MongoDbManager()
+def getLoadTimeMinMax(period, cid):
+    dbManager = MongoDbManager(cid)
+    data = filterByDate(dbManager, period) 
+    #  Min max median
+    load_data = {}
+    load_data["min"] = []  # float 
+    load_data["max"] = []  # float
+    load_data["median"] = []  # float
+
+
+    for d in data:
+        # url_data = d["url"]d -> db sorting
+        try:
+            request_time = d['response_time']
+        except:
+            request_time = d['request_time']
+        request_times.append(request_time)
+    
+    load_data["min"] = min(request_times)
+    load_data["max"] = max(request_times)
+    load_data["median"] = np.median(request_times)
+
+    dbManager.client.close()
+
+    return load_data
+
+def getTotalData(period,cid):
+    dbManager = MongoDbManager(cid)
     data = filterByDate(dbManager, period) 
 
-    total_data = []
-
+    total_data = {}
+    total_data['total_log_data'] = []
+    total_data['load_time_data'] = {}
+    total_data['top_load_url'] = []
+    request_times = []
+ 
     for d in data:
         time = d['time']
         time = datetime.datetime.fromtimestamp(time).strftime('%Y-%m-%dT%H:%M:%S.%f')
+        url = d['url']
+        xpath = d['xpath']
+        status_code = d['status_code']
+
+        try:
+            request_time = d['response_time']
+        except:
+            request_time = d['request_time']
+        request_times.append(request_time)
+
+        detection = d['detection']
+        module = d['module']
+        progress = d['progress']
+
+        try:
+            logdata = d['logdata']
+        except:
+            logdata = None
+
+        row = [time, url, xpath, status_code, request_time, module, str(detection), progress, logdata]
+        total_data['total_log_data'].append(row)
+    
+    total_data['load_time_data']["min"] = min(request_times)
+    total_data['load_time_data']["max"] = max(request_times)
+    total_data['load_time_data']["median"] = np.median(request_times)
+
+    total_data['top_load_url'] = getMaxLoadURL(dbManager, period)
+    
+    return total_data
+
+
+def getTotalReportData(cid):
+    dbManager = MongoDbManager(cid)
+    data = dbManager.collection.find().sort("time", -1)
+    
+    report_data = []
+
+    for d in data:
+        time = d['time']
+        time = datetime.datetime.fromtimestamp(time).strftime('%Y-%m-%d %H:%M:%S.%f')
         url = d['url']
         xpath = d['xpath']
         status_code = d['status_code']
@@ -293,14 +380,16 @@ def getTotalData(period):
         detection = d['detection']
         module = d['module']
         progress = d['progress']
+        logdata = -1
 
-        try:
-            logdata = d['logdata']
-        except:
-            logdata = "-"
+        if detection:
+            try:
+                logdata = d['logdata']
+            except:
+                logdata = -1
+                
 
         row = [time, url, xpath, status_code, request_time, module, str(detection), progress, logdata]
-
-        total_data.append(row)
+        report_data.append(row)
     
-    return total_data
+    return report_data

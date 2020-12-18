@@ -65,7 +65,7 @@ function loadTimeRefresh(result_data, target_id){
       },
       xaxis: {
         categories: result_data['time'],
-        type: 'datetime',
+        type: 'category',
         datetimeUTC: false,
         datetimeFormatter: {
             year: 'yyyy',
@@ -97,8 +97,6 @@ function getApdexData(period){
         contentType: "application/json",
         data: {'period': period},
         success: function(resultData) {
-            console.log(resultData)
-
             $('#apdex-chart > div').remove()
             $('.apdex-no').text(resultData["apdex"])
             $('.apdex-200').text(resultData['200'] + '%')
@@ -106,7 +104,45 @@ function getApdexData(period){
             $('.apdex-400').text(resultData['400'] + '%')
             $('.apdex-400-bar').css('width', resultData['400']*100 + '%');
 
-            $('.url-error-container').text(resultData['url'])
+            error_urls = resultData['url'];
+
+            error_urls.forEach(error_url => {
+                url = error_url[0]
+                code = error_url[1]
+                
+                var area = $('.url-error-table');
+                var temp = document.createElement('tr');
+                var td1 = document.createElement('td');
+                var a_url = document.createElement('a');
+                $(a_url).text(url);
+                $(a_url).prop('href', url)
+                $(td1).css('max-width', '260px');
+                $(td1).css('font-size', '13px');
+                var td2 = document.createElement('td');
+                td2.className = "text-muted";
+                $(td2).css('width', '40px');
+                var h6 = document.createElement('h6');
+                h6.className = "m-0";
+                var span_chk = document.createElement('span');
+                if(code == 400){
+                    span_chk.className = "badge bg-danger";
+                } else {
+                    span_chk.className = "badge bg-warning";
+                }
+                $(span_chk).text(code);
+
+
+                $(span_chk).appendTo(h6);
+                $(h6).appendTo(td2);
+
+                $(a_url).appendTo(td1);
+                $(td1).appendTo(temp);
+                $(td2).appendTo(temp);
+    
+                $(temp).appendTo(area);
+            });
+
+            // $('.url-error-container').text(resultData['url'])
             apdexRefresh(resultData)
 
         //   $('#covid-change-data').text(changeRatio + ' ' + resultData['change_value'] + ' 명')
@@ -154,8 +190,8 @@ function apdexRefresh(result_data){
         floating: true,
         fontSize: '10px',
         position: 'left',
-        offsetX: -10,
-        offsetY: 0,
+        offsetX: -15,
+        offsetY: -7,
         labels: {
           useSeriesColors: true,
         },
@@ -317,7 +353,6 @@ function changeLogProgress(time, progress, change){
 } 
 
 function showLogModal(logdata){
-    console.log(logdata)
     $('.log-modal-container #timestamp').text(logdata[0])
     $('.log-modal-container #url').text(logdata[1])
     $('.log-modal-container #xpath').text(logdata[2])
@@ -326,4 +361,41 @@ function showLogModal(logdata){
     $('.log-modal-container #module').text(logdata[5])
     $('.log-modal-container #detection').text(logdata[6])
     $('.log-modal-container #progress').text(logdata[7])
+    if (logdata[8] != -1){
+        $('.log-modal-container .logdata').css('display', 'block');
+        $('.log-modal-container .logdata *').css('display', 'block');
+
+        var module_logs = logdata[8];
+        $('.submodule-log-container *').remove()
+
+        module_logs.forEach(module_log => {
+            var area = $('.submodule-log-container');
+            var temp = document.createElement('div');
+            temp.className = "row";
+            var hr = document.createElement('hr');
+            hr.className = "col-12";
+            $(hr).appendTo(temp);
+
+            for (var key in module_log) { 
+                // make div in here
+                var submodule_dt = document.createElement('dt');
+                submodule_dt.className = "col-3";
+                $(submodule_dt).text(key);
+                var submodule_dd = document.createElement('dd');
+                submodule_dd.className = "col-9";
+                submodule_dd.idName = "submodule";
+                $(submodule_dd).text(module_log[key]);
+                
+                $(submodule_dt).appendTo(temp);
+                $(submodule_dd).appendTo(temp);
+            }
+            $(temp).appendTo(area);
+        });
+        
+        // $('.log-modal-container #submodule').text(logdata[8])
+
+    } else {
+        $('.log-modal-container .logdata').css('display', 'none');
+        $('.log-modal-container .logdata *').css('display', 'none');
+    }
 }

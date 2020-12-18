@@ -45,20 +45,36 @@ a:hover {color: #333; font-weight: 700;}
 .subheader { color: #6D7183;}
 .chart-header {font-size: 23px; font-weight: 700;}
 
+
+.dashboard-middle > .col-3 {height: 190px;}
+.dashboard-middle > .col-3 > .card {height: 100%;}
+
+
+.apdex-chart-container {min-width: 190px;}
 .apdex-no { z-index: 10; margin-top: -93px; font-size: 16px; font-weight: 700px;}
 
 
 .response-code-chart > div {height: 50px;}
-
 .response-code-chart {font-size: 12px;}
 
 
 .performance-log-container {max-height: 750px;}
 .performance-log-container * {max-height: 750px;}
-.performance-log-container .table-responsive {max-height: 7s30px;}
+.performance-log-container .table-responsive {max-height: 730px;}
 
 
 .log-progress-container #time { font-size: 12px; width: 90px;}
 .log-progress-container #module_name { font-size: 12px; }
 .log-progress-container h6 {cursor: pointer; width: 40px;}
 .log-progress-container .log-button {width: 40px;}
+
+.url-error-container .table-responsive {max-height: 120px;}
+
+.load-time-container .row {height: 40px; border-bottom: solid 0.5px; border-color: rgba(92, 92, 92, 0.25);}
+.load-time-container .row:last-child {border: 0px;}
+.load-time-container .row * {opacity: 1;}
+.load-time-container .row div {display: flex; align-items: center;}
+.load-time-container .row .col-5 {font-weight: 700;}
+
+.url-load-container .col {font-size: 13px;}
+.url-load-container .table-responsive { max-height: 120px;}

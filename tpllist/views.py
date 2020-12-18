@@ -27,38 +27,38 @@ class CustomerView(ListView):
         context['sites'] = Site.objects.filter(customer_id=self.kwargs['pk'])
         context['customer_id'] = self.kwargs['pk']
         context['curr_customer'] = Customer.objects.filter(customer_id=self.kwargs['pk'])
-        context['total_data'] = MongoDBManager.getTotalData(int(1))
-        context['log_progress_data_alert'] = MongoDBManager.getLogProgressData(int(1))['-1']
-        context['log_progress_data_process'] = MongoDBManager.getLogProgressData(int(1))['0']
-        context['log_progress_data_finish'] = MongoDBManager.getLogProgressData(int(1))['1']
+        context['total_data'] = MongoDBManager.getTotalData(int(1), self.kwargs['pk'])
+        context['log_progress_data_alert'] = MongoDBManager.getLogProgressData(int(1),self.kwargs['pk'])['-1']
+        context['log_progress_data_process'] = MongoDBManager.getLogProgressData(int(1), self.kwargs['pk'])['0']
+        context['log_progress_data_finish'] = MongoDBManager.getLogProgressData(int(1), self.kwargs['pk'])['1']
         # context['customers'] =Customer.objects.all()
         return context
 
 def getStatusCodeData(request, pk):
     period = request.GET.get('period')
-    status_code_data = MongoDBManager.getStatusCodeData(int(period))
+    status_code_data = MongoDBManager.getStatusCodeData(int(period), pk)
     return HttpResponse(json.dumps(status_code_data), content_type='application/json')
 
 def getLoadData(request, pk):
     period = request.GET.get('period')
-    load_time_data = MongoDBManager.getLoadData(int(period))
+    load_time_data = MongoDBManager.getLoadData(int(period), pk)
     return HttpResponse(json.dumps(load_time_data), content_type='application/json')
 
 def getApdexData(request, pk):
     period = request.GET.get('period')
-    apdex_data = MongoDBManager.getApdexData(int(period))
+    apdex_data = MongoDBManager.getApdexData(int(period), pk)
     return HttpResponse(json.dumps(apdex_data), content_type='application/json')
 
 def getModuleData(request, pk):
     period = request.GET.get('period')
-    module_data = MongoDBManager.getModuleData(int(period))
+    module_data = MongoDBManager.getModuleData(int(period), pk)
     return HttpResponse(json.dumps(module_data), content_type='application/json')
 
 def changeLogProgress(request, pk):
     time = request.GET.get('time')
     progress = request.GET.get('progress')
     change = request.GET.get('change')
-    result = MongoDBManager.changeLogProgress(float(time), int(progress), int(change))
+    result = MongoDBManager.changeLogProgress(float(time), int(progress), int(change), pk)
     if result:
         return HttpResponse(json.dumps({}), content_type='application/json')
 
@@ -161,6 +161,7 @@ class CustomerReportView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['customer_id'] = self.kwargs['pk']
+        context['report_data'] = MongoDBManager.getTotalReportData(self.kwargs['pk'])
         context['curr_customer'] = Customer.objects.filter(customer_id=self.kwargs['pk'])
         return context
 

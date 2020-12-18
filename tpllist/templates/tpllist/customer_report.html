@@ -2,123 +2,154 @@
 {% load static %}
 
 {% block content %}
-<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Report</h1>
-  </div>
-
-  <style>
-    .row {margin-bottom: 10px;}
-    .check-time {margin-top: 20px; background-color: #BFFCE8;}
-  </style>
-
-  <div class="data-table">
-      <div class="row">
-        <div class="col">
-            <!--log chart-->
-            <div class="card">
-              <div class="card-body">
-                <div class="d-flex">
-                  <h3 class="card-title">크롤링 로그 및 상세 모듈 로그</h3>
-                </div>
-                <div class="table-responsive">
+<div class="row container-tab py-4">
+  <div class="col">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">모니터링 및 탐지 로그</h1>
+    </div>
+      <div class="card container-tab-card">
+          <div class="card-body">
+              <div class="table-responsive">
                   <table class="table table-vcenter card-table">
                     <thead>
                       <tr>
-                        <th>Time</th>
+                        <th>Timestamp</th>
                         <th>URL</th>
-                        <th>xpath</th>
+                        <th>status_code</th>
+                        <th>request_time</th>
                         <th>module</th>
                         <th>detection</th>
+                        <th>submodules</th>
                         <th>Detail</th>
                       </tr>
                     </thead>
                     <tbody class="dropdown">
-                        <tr>
-                            <td >2020-11-17 23:11:17.812169</td>
-                            <td class="text-muted" >
-                            http://3.131.17.188/wordpress
-                            </td>
-                            <td class="text-muted" >/html/body/div/div/main/div[2]/div/div/div/div/div[2]/table/tbody/tr[5]/td[2]</td>
-                            <td class="text-muted" >html</td>
-                            <td class="text-muted" >false</td>
-                            <td class="text-muted" >
-                                <button type="button" class="btn btn-outline-success btn-sm report-btn dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown"aria-haspopup="true" aria-expanded="false">Detail</button>
-                            </td>
-                        
-                        </tr>
-                        <tbody  aria-labelledby="dropdownMenuButton">
-                            <tr>
-                                <td colspan=6>
-                                    <div>
-                                        "logdata": [
-			{
-				"submodule": 1,
-				"original_code": "(<p>안뇽!)",
-				"modified_code": "(<p>메롱!)"
-			},
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                      <tr>
-                        <td >2020-11-17 23:11:17.812169</td>
-                        <td class="text-muted" >
-                          http://3.131.17.188/wordpress
-                        </td>
-                        <td class="text-muted" >xpath</td>
-                        <td class="text-muted" >xss</td>
-                        <td class="text-muted" >false</td>
-                        <td class="text-muted" >
-                            <button type="button" class="btn btn-outline-success btn-sm report-btn">Detail</button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td >2020-11-17 23:11:17.812169</td>
-                        <td class="text-muted" >
-                          http://3.131.17.188/wordpress
-                        </td>
-                        <td class="text-muted" >xpath</td>
-                        <td class="text-muted" >html</td>
-                        <td class="text-muted" >false</td>
-                        <td class="text-muted" >
-                            <button type="button" class="btn btn-outline-success btn-sm report-btn">Detail</button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td >2020-11-17 23:11:17.812169</td>
-                        <td class="text-muted" >
-                          http://3.131.17.188/wordpress
-                        </td>
-                        <td class="text-muted" >xpath</td>
-                        <td class="text-muted" >xss</td>
-                        <td class="text-muted" >false</td>
-                        <td class="text-muted" >
-                            <button type="button" class="btn btn-outline-success btn-sm report-btn">Detail</button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td >2020-11-17 23:11:17.812169</td>
-                        <td class="text-muted" >
-                          http://3.131.17.188/wordpress
-                        </td>
-                        <td class="text-muted" >xpath</td>
-                        <td class="text-muted" >html</td>
-                        <td class="text-muted" >false</td>
-                        <td class="text-muted" >
-                            <button type="button" class="btn btn-outline-success btn-sm report-btn">Detail</button>
-                        </td>
-                      </tr>
-                      
+                      {% for data_row in report_data %}
+                          <tr>
+                              <td>{{ data_row.0 }}</td>
+                              <td><a href="{{ data_row.1 }}">{{ data_row.1 }}</a></td>
+                              <td>{{ data_row.3 }}</td>
+                              <td>{{ data_row.4 }}</td>
+                              <td>{{ data_row.5 }}</td>
+                              <td>{{ data_row.6 }}</td>
+                              
+                              <td>
+                                {% if data_row.8 != -1 %}
+                                  {% for d in data_row.8 %}
+                                    {% if forloop.counter0 < 3 %}
+                                      <span class="badge rounded-pill bg-dark">{{ d.submodule }}</span>
+                                    {% else %}
+                                      {% if forloop.counter0 == 3 %}
+                                        ...
+                                      {% endif %}
+                                    {% endif %}
+                                  {% endfor %}
+                                {% else %}
+                                  -
+                                {% endif %}
+                              </td>
+                              <td class="text-muted" >
+                                  <button type="button" class="btn btn-outline-success btn-sm report-btn" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="showLogModal({{ data_row }})">Detail</button>
+                              </td>
+                          </tr>
+                      {% endfor %}
                     </tbody>
                   </table>
-                </div>
               </div>
-            </div>
           </div>
       </div>
   </div>
+</div>
+<div class="modal fade" style="display: none;" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">로그 상세 내역</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <dl class="row log-modal-container">
+              <dt class="col-3">Time:</dt>
+              <dd id="timestamp" class="col-9">2020-01-05 16:42:29 UTC</dd>
+              <dt class="col-3">URL:</dt>
+              <dd id="url" class="col-9">www.sample.com</dd>
+              <dt class="col-3">Xpath:</dt>
+              <dd id="xpath" class="col-9">sample xpath</dd>
+              <dt class="col-3">응답 코드:</dt>
+              <dd id="status_code" class="col-9">999</dd>
+              <dt class="col-3">응답 시간:</dt>
+              <dd id="request_time" class="col-9">0.0ms</dd>
+              <dt class="col-3">메인 모듈:</dt>
+              <dd id="module" class="col-9">Module Name</dd>
+              <dt class="col-3">탐지 여부:</dt>
+              <dd id="detection" class="col-9">True</dd>
+              <dt class="col-3">처리 여부:</dt>
+              <dd id="progress" class="col-9">Module Name</dd>
+              <div class="logdata col-12 submodule-log-container" id="submodule" style="display: none;" class="col">
+                  <div class="row">
+                      <hr>
+                      <dt class="col-3">Submodule:</dt>
+                      <dd id="submodule" class="col-9">sample submodule</dd>
+                  </div>
+              </div>
+          </dl>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function showLogModal(logdata){
+    $('.log-modal-container #timestamp').text(logdata[0])
+    $('.log-modal-container #url').text(logdata[1])
+    $('.log-modal-container #xpath').text(logdata[2])
+    $('.log-modal-container #status_code').text(logdata[3])
+    $('.log-modal-container #request_time').text(logdata[4])
+    $('.log-modal-container #module').text(logdata[5])
+    $('.log-modal-container #detection').text(logdata[6])
+    $('.log-modal-container #progress').text(logdata[7])
+    if (logdata[8] != -1){
+        $('.log-modal-container .logdata').css('display', 'block');
+        $('.log-modal-container .logdata *').css('display', 'block');
 
-</main>  
+        var module_logs = logdata[8];
+        $('.submodule-log-container *').remove()
+
+        module_logs.forEach(module_log => {
+            var area = $('.submodule-log-container');
+            var temp = document.createElement('div');
+            temp.className = "row";
+            var hr = document.createElement('hr');
+            hr.className = "col-12";
+            $(hr).appendTo(temp);
+
+            for (var key in module_log) { 
+                // make div in here
+                var submodule_dt = document.createElement('dt');
+                submodule_dt.className = "col-3";
+                $(submodule_dt).text(key);
+                var submodule_dd = document.createElement('dd');
+                submodule_dd.className = "col-9";
+                submodule_dd.idName = "submodule";
+                $(submodule_dd).text(module_log[key]);
+                
+                $(submodule_dt).appendTo(temp);
+                $(submodule_dd).appendTo(temp);
+            }
+            $(temp).appendTo(area);
+        });
+        
+        // $('.log-modal-container #submodule').text(logdata[8])
+
+    } else {
+        $('.log-modal-container .logdata').css('display', 'none');
+        $('.log-modal-container .logdata *').css('display', 'none');
+    }
+}
+</script>
+
+
 {% endblock %}
 
