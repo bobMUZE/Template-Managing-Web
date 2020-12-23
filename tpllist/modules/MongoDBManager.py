@@ -1,7 +1,9 @@
-import pymongo
+import pymongo, pytz
 from time import time
 import datetime
 import numpy as np 
+
+seoul_zone = pytz.timezone('Asia/Seoul')
 
 class MongoDbManager:
     def __init__(self, cid):
@@ -56,7 +58,7 @@ def sortByColumn(data):
     return sorted_data
 
 def convert_datetime(unixtime):
-    date = datetime.datetime.fromtimestamp(unixtime).strftime('%Y-%m-%dT%H:%M:%S.%f')
+    date = datetime.datetime.fromtimestamp(unixtime, seoul_zone).strftime('%Y-%m-%dT%H:%M:%S.%f')
     return date[:-3] # format : str
 
 
@@ -227,10 +229,10 @@ def getModuleData(period, cid):
 
     return module_data
 
-def changeLogProgress(time, progress, change, cid):
+def changeLogProgress(time, progress, change, module, cid):
     # time(datetime) -> unix
     dbManager = MongoDbManager(cid)
-    query = {"time": time}
+    query = {"time": time, "module": module}
     dbManager.collection.update_one(query, {"$set" : {'progress': progress + change}})
 
     return True
@@ -250,7 +252,7 @@ def getLogProgressData(period, cid):
 
     for d in data:
         unixtime = d['time']
-        time = datetime.datetime.fromtimestamp(unixtime).strftime('%H:%M:%S')
+        time = datetime.datetime.fromtimestamp(unixtime, seoul_zone).strftime('%H:%M:%S')
         module = d['module']
         progress = d['progress']
         
@@ -323,11 +325,19 @@ def getTotalData(period,cid):
     total_data['total_log_data'] = []
     total_data['load_time_data'] = {}
     total_data['top_load_url'] = []
+    
+    total_data['log_progress_data'] = {}
+    total_data['log_progress_data']['-1'] = []
+    total_data['log_progress_data']['0'] = []
+    total_data['log_progress_data']['1'] = []
+    total_data['log_progress_data']['2'] = []
+    total_data['log_progress_data']['3'] = []
+
     request_times = []
  
     for d in data:
         time = d['time']
-        time = datetime.datetime.fromtimestamp(time).strftime('%Y-%m-%dT%H:%M:%S.%f')
+        d_time = datetime.datetime.fromtimestamp(time, seoul_zone).strftime('%Y-%m-%d %H:%M:%S.%f')
         url = d['url']
         xpath = d['xpath']
         status_code = d['status_code']
@@ -345,9 +355,13 @@ def getTotalData(period,cid):
         try:
             logdata = d['logdata']
         except:
-            logdata = None
+            logdata = -1
 
-        row = [time, url, xpath, status_code, request_time, module, str(detection), progress, logdata]
+        row = [d_time, url, xpath, status_code, request_time, module, str(detection), progress, logdata]
+
+        if detection and -1 <= progress <= 1:
+            total_data['log_progress_data'][f'{progress}'].append([d_time[11:-3], time]+row[1:]+[d_time])
+
         total_data['total_log_data'].append(row)
     
     total_data['load_time_data']["min"] = min(request_times)
@@ -367,7 +381,7 @@ def getTotalReportData(cid):
 
     for d in data:
         time = d['time']
-        time = datetime.datetime.fromtimestamp(time).strftime('%Y-%m-%d %H:%M:%S.%f')
+        time = datetime.datetime.fromtimestamp(time, seoul_zone).strftime('%Y-%m-%d %H:%M:%S.%f')
         url = d['url']
         xpath = d['xpath']
         status_code = d['status_code']

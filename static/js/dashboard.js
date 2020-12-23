@@ -13,7 +13,6 @@ function getLoadData(period, target_id){
         contentType: "application/json",
         data: {'period': period},
         success: function(resultData) {
-            console.log(resultData)
             $('#load-time-chart > div').remove()
             loadTimeRefresh(resultData, target_id)
 
@@ -99,9 +98,9 @@ function getApdexData(period){
         success: function(resultData) {
             $('#apdex-chart > div').remove()
             $('.apdex-no').text(resultData["apdex"])
-            $('.apdex-200').text(resultData['200'] + '%')
+            $('.apdex-200').text(resultData['200']*100 + '%')
             $('.apdex-200-bar').css('width', resultData['200']*100 + '%');
-            $('.apdex-400').text(resultData['400'] + '%')
+            $('.apdex-400').text(resultData['400']*100 + '%')
             $('.apdex-400-bar').css('width', resultData['400']*100 + '%');
 
             error_urls = resultData['url'];
@@ -116,6 +115,7 @@ function getApdexData(period){
                 var a_url = document.createElement('a');
                 $(a_url).text(url);
                 $(a_url).prop('href', url)
+                $(a_url).prop('target', '_blank')
                 $(td1).css('max-width', '260px');
                 $(td1).css('font-size', '13px');
                 var td2 = document.createElement('td');
@@ -333,14 +333,13 @@ function getLogProgressData(){
     });
 }
 
-function changeLogProgress(time, progress, change){
-    console.log(change)
+function changeLogProgress(time, progress, change, module){
     $.ajax({
         url: "./changeLogProgress/",
         type: "get",
         dataType: "json",
         contentType: "application/json",
-        data: {'time': time, "progress": progress, "change": change},
+        data: {'time': time, "progress": progress, "change": change, "module": module},
         success: function(resultData) {
             location.reload();
             // reload 
@@ -352,9 +351,72 @@ function changeLogProgress(time, progress, change){
     });
 } 
 
+function showEventLogModal(logdata){
+    $('.log-modal-container #timestamp').text(logdata[11])
+    var url_col = $('.log-modal-container #url')
+    $(url_col).text("");
+    var a_url = document.createElement('a');
+    $(a_url).prop('href', logdata[2]);
+    $(a_url).prop('target', '_blank')
+    $(a_url).text(logdata[2]);
+    $(a_url).appendTo(url_col);
+
+    $('.log-modal-container #xpath').text(logdata[3])
+    $('.log-modal-container #status_code').text(logdata[4])
+    $('.log-modal-container #request_time').text(logdata[5])
+    $('.log-modal-container #module').text(logdata[6])
+    $('.log-modal-container #detection').text(logdata[7])
+    $('.log-modal-container #progress').text(logdata[8])
+    if (logdata[9] != -1){
+        $('.log-modal-container .logdata').css('display', 'block');
+        $('.log-modal-container .logdata *').css('display', 'block');
+
+        var module_logs = logdata[9];
+        // console.log(module_logs)
+        $('.submodule-log-container *').remove()
+
+        module_logs.forEach(module_log => {
+            var area = $('.submodule-log-container');
+            var temp = document.createElement('div');
+            temp.className = "row";
+            var hr = document.createElement('hr');
+            hr.className = "col-12";
+            $(hr).appendTo(temp);
+
+            for (var key in module_log) { 
+                // make div in here
+                var submodule_dt = document.createElement('dt');
+                submodule_dt.className = "col-3";
+                $(submodule_dt).text(key);
+                var submodule_dd = document.createElement('dd');
+                submodule_dd.className = "col-9";
+                submodule_dd.idName = "submodule";
+                $(submodule_dd).text(module_log[key]);
+                
+                $(submodule_dt).appendTo(temp);
+                $(submodule_dd).appendTo(temp);
+            }
+            $(temp).appendTo(area);
+        });
+        
+        // $('.log-modal-container #submodule').text(logdata[8])
+
+    } else {
+        $('.log-modal-container .logdata').css('display', 'none');
+        $('.log-modal-container .logdata *').css('display', 'none');
+    }
+}
+
 function showLogModal(logdata){
     $('.log-modal-container #timestamp').text(logdata[0])
-    $('.log-modal-container #url').text(logdata[1])
+    var url_col = $('.log-modal-container #url')
+    $(url_col).text("");
+    var a_url = document.createElement('a');
+    $(a_url).prop('href', logdata[1]);
+    $(a_url).prop('target', '_blank')
+    $(a_url).text(logdata[1]);
+    $(a_url).appendTo(url_col);
+
     $('.log-modal-container #xpath').text(logdata[2])
     $('.log-modal-container #status_code').text(logdata[3])
     $('.log-modal-container #request_time').text(logdata[4])
@@ -399,3 +461,30 @@ function showLogModal(logdata){
         $('.log-modal-container .logdata *').css('display', 'none');
     }
 }
+
+
+
+function log_true_filter(){
+    var is_true_checked = $("#log-table-true-btn").prop("checked");
+    if(is_true_checked){
+        $('.log-true').css("display", "none");
+        $('#log-table-true-btn').attr( 'checked', false );
+    } else {
+        $('.log-true').css("display", "table-row");
+        $('#log-table-true-btn').attr( 'checked', true );
+    }
+}
+
+function log_false_filter(){
+    var is_false_checked = $("#log-table-false-btn").prop("checked");
+    if(is_false_checked){
+        $('.log-false').css("display", "none");
+        $('#log-table-false-btn').attr( 'checked', false );
+    } else {
+        $('.log-false').css("display", "table-row");
+        $('#log-table-false-btn').attr( 'checked', true );
+    }
+}
+
+document.addEventListener("DOMContentLoaded", log_true_filter());
+document.addEventListener("DOMContentLoaded", log_false_filter());

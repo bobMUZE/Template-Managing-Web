@@ -36,7 +36,7 @@
                                 <div class="card text-white text-center bg-danger mb-3">
                                     <div class="card-header">이벤트 발생</div>
                                     <div class="card-body">
-                                        <div>1</div>
+                                        <div>{{ log_progress_data_alert | length }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -46,7 +46,7 @@
                                 <div class="card text-dark text-center bg-warning mb-3">
                                     <div class="card-header">처리</div>
                                     <div class="card-body">
-                                        <div>1</div>
+                                        <div>{{ log_progress_data_process | length }}</div>
                                     </div>
                                   </div>
                             </div>
@@ -56,7 +56,7 @@
                                 <div class="card text-white text-center bg-success mb-3">
                                     <div class="card-header">완료</div>
                                     <div class="card-body">
-                                        <div>1</div>
+                                        <div>{{ log_progress_data_finish | length }}</div>
                                     </div>
                                   </div>
                             </div>
@@ -84,10 +84,13 @@
                                                     {% for data in log_progress_data_alert %}
                                                       <tr>
                                                         <!-- <td><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg></td>       -->
-                                                        <td id="time">{{ data.1 }}</td>
-                                                        <td id="module_name">{{ data.2 }}</td>
+                                                        <td id="time">{{ data.0 }}</td>
+                                                        <td id="module_name">{{ data.6 }}</td>
                                                         
-                                                        <td class="log-button text-muted" onclick="changeLogProgress({{data.0}}, -1, 1)">
+                                                        <td class="log-button text-muted" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="showEventLogModal({{ data }})">
+                                                            <h6 class="m-0"><span class="badge bg-secondary">상세</span></h6>
+                                                        </td>
+                                                        <td class="log-button text-muted ps-0" onclick="changeLogProgress({{data.1}}, -1, 1, '{{ data.6 }}')">
                                                             <h6 class="m-0"><span class="badge bg-secondary">확인</span></h6>
                                                         </td>
                                                       </tr>
@@ -108,12 +111,15 @@
                                                     {% for data in log_progress_data_process %}
                                                     <tr>
                                                         <!-- <td><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg></td>       -->
-                                                        <td id="time">{{ data.1 }}</td>
-                                                        <td id="module_name">{{ data.2 }}</td>
-                                                        <td class="log-button text-muted" onclick="changeLogProgress({{data.0}}, 0, -1)">
+                                                        <td id="time">{{ data.0 }}</td>
+                                                        <td id="module_name">{{ data.6 }}</td>
+                                                        <td class="log-button text-muted" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="showEventLogModal({{ data }})">
+                                                            <h6 class="m-0"><span class="badge bg-secondary">상세</span></h6>
+                                                        </td>
+                                                        <td class="log-button text-muted ps-0" onclick="changeLogProgress({{data.1}}, 0, -1, '{{ data.6 }}')">
                                                             <h6 class="m-0"><span class="badge bg-secondary">취소</span></h6>
                                                         </td>
-                                                        <td class="log-button text-muted" onclick="changeLogProgress({{data.0}}, 0, 1)">
+                                                        <td class="log-button text-muted ps-0" onclick="changeLogProgress({{data.1}}, 0, 1, '{{ data.6 }}')">
                                                             <h6 class="m-0"><span class="badge bg-secondary">확인</span></h6>
                                                         </td>
                                                       </tr>
@@ -135,14 +141,17 @@
                                                     {% for data in log_progress_data_finish %}
                                                         <tr>
                                                             <!-- <td><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg></td>       -->
-                                                            <td id="time">{{ data.1 }}</td>
-                                                            <td id="module_name">{{ data.2 }}</td>
-                                                            <td class="log-button text-muted" onclick="changeLogProgress({{data.0}}, 1, -1)">
+                                                            <td id="time">{{ data.0 }}</td>
+                                                            <td id="module_name">{{ data.6 }}</td>
+                                                            
+                                                            <td class="log-button text-muted" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="showEventLogModal({{ data }})">
+                                                                <h6 class="m-0"><span class="badge bg-secondary">상세</span></h6>
+                                                            </td>
+                                                            <td class="log-button text-muted ps-0" onclick="changeLogProgress({{data.1}}, 1, -1, '{{ data.6 }}')">
                                                                 <h6 class="m-0"><span class="badge bg-secondary">취소</span></h6>
                                                             </td>
-                                                            <td class="log-button text-muted" onclick="changeLogProgress({{data.0}}, 1, 1)">
-                                                                <h6 class="m-0"><span class="badge bg-secondary">확인</span></h6>
-                                                            </td>
+                                                            
+                                                            
                                                         </tr>
                                                     {% endfor %}
                                                 </tbody>
@@ -303,6 +312,16 @@
 </div>
 <div class="row log-table">
     <div class="col">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">모니터링 및 탐지 로그</h1>
+            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                <input id="log-table-true-btn" type="checkbox" class="btn-check" id="btncheck1" autocomplete="off" >
+                <label class="btn btn-outline-dark" for="btncheck1" onclick="log_true_filter()">True</label>
+              
+                <input id="log-table-false-btn" type="checkbox" class="btn-check" id="btncheck2" autocomplete="off" checked>
+                <label class="btn btn-outline-dark" for="btncheck2" onclick="log_false_filter()">False</label>
+              </div>
+        </div>
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
@@ -320,9 +339,13 @@
                       </thead>
                       <tbody class="dropdown">
                         {% for data_row in total_data.total_log_data %}
-                            <tr>
+                            {% if data_row.6 == "True" %}
+                                <tr class="log-true">
+                            {% else %}
+                                <tr class="log-false">
+                            {% endif %}
                                 <td>{{ data_row.0 }}</td>
-                                <td><a href="{{ data_row.1 }}">{{ data_row.1 }}</a></td>
+                                <td><a href="{{ data_row.1 }}" target="_blank">{{ data_row.1 }}</a></td>
                                 <td>{{ data_row.3 }}</td>
                                 <td>{{ data_row.4 }}</td>
                                 <td>{{ data_row.5 }}</td>
@@ -349,7 +372,7 @@
         <div class="modal-body">
             <dl class="row log-modal-container">
                 <dt class="col-3">Time:</dt>
-                <dd id="timestamp" class="col-9">2020-01-05 16:42:29 UTC</dd>
+                <dd id="timestamp" class="col-9">2020-01-05 16:42:29</dd>
                 <dt class="col-3">URL:</dt>
                 <dd id="url" class="col-9">www.sample.com</dd>
                 <dt class="col-3">Xpath:</dt>

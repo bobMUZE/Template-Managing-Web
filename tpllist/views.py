@@ -28,9 +28,11 @@ class CustomerView(ListView):
         context['customer_id'] = self.kwargs['pk']
         context['curr_customer'] = Customer.objects.filter(customer_id=self.kwargs['pk'])
         context['total_data'] = MongoDBManager.getTotalData(int(1), self.kwargs['pk'])
-        context['log_progress_data_alert'] = MongoDBManager.getLogProgressData(int(1),self.kwargs['pk'])['-1']
-        context['log_progress_data_process'] = MongoDBManager.getLogProgressData(int(1), self.kwargs['pk'])['0']
-        context['log_progress_data_finish'] = MongoDBManager.getLogProgressData(int(1), self.kwargs['pk'])['1']
+        context['log_progress_data_alert'] = MongoDBManager.getTotalData(int(1), self.kwargs['pk'])['log_progress_data']['-1']
+        context['log_progress_data_process'] = MongoDBManager.getTotalData(int(1), self.kwargs['pk'])['log_progress_data']['0']
+        context['log_progress_data_finish'] = MongoDBManager.getTotalData(int(1), self.kwargs['pk'])['log_progress_data']['1']
+        # context['log_progress_data_process'] = MongoDBManager.getLogProgressData(int(1), self.kwargs['pk'])['0']
+        # context['log_progress_data_finish'] = MongoDBManager.getLogProgressData(int(1), self.kwargs['pk'])['1']
         # context['customers'] =Customer.objects.all()
         return context
 
@@ -56,9 +58,11 @@ def getModuleData(request, pk):
 
 def changeLogProgress(request, pk):
     time = request.GET.get('time')
+    module = request.GET.get('module')
     progress = request.GET.get('progress')
     change = request.GET.get('change')
-    result = MongoDBManager.changeLogProgress(float(time), int(progress), int(change), pk)
+
+    result = MongoDBManager.changeLogProgress(float(time), int(progress), int(change), module, pk)
     if result:
         return HttpResponse(json.dumps({}), content_type='application/json')
 
